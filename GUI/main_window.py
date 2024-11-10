@@ -7,8 +7,9 @@ class MainWindow(QMainWindow):
         super().__init__()
 
 
-# Run the application
-app = QApplication(sys.argv)
-window = MainWindow()
-window.show()
-sys.exit(app.exec_())
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())
