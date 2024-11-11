@@ -1,7 +1,7 @@
-[01,01], {00000}, UNUSED
-[01,02], {00000}, UNUSED
-[01,03], {00000}, UNUSED
-[01,04], {00000}, UNUSED
+[01,01], {00456}, Walmart Cat toys
+[01,02], {00411}, Costco pizza
+[01,03], {02100}, John Miller
+[01,04], {00231}, John's shrimp and stuff
 [01,05], {00000}, UNUSED
 [01,06], {00000}, UNUSED
 [01,07], {00000}, UNUSED
@@ -10,7 +10,7 @@
 [01,10], {00000}, UNUSED
 [01,11], {00000}, UNUSED
 [01,12], {00000}, UNUSED
-[02,01], {00000}, UNUSED
+[02,01], {00500}, Horse supplies
 [02,02], {00000}, UNUSED
 [02,03], {00000}, UNUSED
 [02,04], {00000}, UNUSED
