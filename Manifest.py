@@ -1,5 +1,6 @@
 import numpy as np
 from ContainerData import ContainerData
+from Logger import Logger
 ## Manifest is the interface for interacting with the manifest file
 ## The manifest file is a grid of ContainerData objects
 class Manifest:
@@ -36,6 +37,7 @@ class Manifest:
             ContainerMatrix.append(ContainerRow)
         
         self.ContainerMatrix = ContainerMatrix
+        Log.log_open_manifest(self)
         pass
 
     ## Determine if a position is NAN
@@ -71,6 +73,15 @@ class Manifest:
 
         self.ContainerMatrix[x - 1][y - 1].weight = weight
         pass
+    
+    def container_amount(self):
+        sum = 0
+        for containerrow in self.ContainerMatrix:
+            for container in containerrow:
+                if(container.name != "UNUSED" and container.name != "NAN"):
+                    sum += 1
+        return sum
+
 
     ## Save the edited manifest data to a new file
     ## with name manifest_pathOUTBOUND.txt
@@ -99,8 +110,16 @@ class Manifest:
         with open('./Manifests/' + self.manifest_name + 'OUTBOUND.txt', 'w') as f:
             for i in OutboundList:
                 f.write(i)
+        Log.log_close_manifest(self)
         pass
 
+
+Log = Logger()
+
+#testing log features
+Log.log_comment("Comment: Hello log file")
+Log.log_sign_in("John Smith")
+Log.log_sign_in("Anil Patel")
 
 path = "./Manifests/examplemanifest.txt" #change this line to input later
 txtfile = path.replace(".txt", "")
@@ -109,6 +128,7 @@ txtfile = txtfile.replace("./Manifests/", "")
 #test declaration and read
 p = Manifest(path, txtfile);
 p.read_manifest()
+
 
 #test data at
 container = p.data_at(1,1)

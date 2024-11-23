@@ -1,12 +1,11 @@
 ## Logger is the interface to write out to the standard log file
 from datetime import datetime, timezone, timedelta
+from ContainerData import ContainerData
 
 def get_time():
     pst = timezone(timedelta(hours=-8))
     now = datetime.now(pst)
     return now.strftime("%Y-%m-%d %H:%M") + " "
-
-#print(get_time())
 
 class Logger:
     def __init__(self):
@@ -17,19 +16,28 @@ class Logger:
         self.currentoperator = ""
 
     ## Log a move that was made by the operator
-    #move = [container_name, 1 or 2]
+    #move = 1 or 2
     #1 = onload
     #2 = unload
-
-    def log_move(self, move):
+    #3 = moved within ship
+    def log_move(self, container, move):
         with open(self.logname, 'a') as f:
-            f.write(get_time() + "\n")
+            if(move == 1):
+                f.write(get_time() +"\"" + container.name + "\"" +  " is onloaded\n")
+            elif(move == 2):
+                f.write(get_time() +"\"" + container.name + "\"" +  " is offloaded\n")
+            elif(move == 3):
+                f.write(get_time() +"\"" + container.name + "\"" +  " is moved within the ship\n")
         pass
 
     def log_open_manifest(self, manifest):
         with open(self.logname, 'a') as f:
-            f.write(get_time() + "\n")
+            f.write(get_time() + "Manifest "+ manifest.manifest_name + ".txt is opened, there are "+ str(manifest.container_amount()) + " containers on the ship\n")
         pass
+
+    def log_close_manifest(self, manifest):
+        with open(self.logname, 'a') as f:
+            f.write(get_time() + "Finishes a cycle. Manifest " + manifest.manifest_name + "OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed\n")
 
     ## Log a comment that the operator wants to make
     def log_comment(self, comment):
@@ -46,9 +54,3 @@ class Logger:
             f.write(get_time() + operator + " signs in\n")
             self.currentoperator = operator
         pass
-
-Log = Logger()
-Log.log_move("move")
-Log.log_comment("I smell smoke ong")
-Log.log_sign_in("John Smith")
-Log.log_sign_in("Anil Patel")
