@@ -7,7 +7,10 @@ class Location:
     TRUCK = "truck"
     CRANE_REST = "crane_rest"
 
-
+'''
+    Position class represents a position in different locations
+    centralizes the logic for moving between locations and calculating the cost of that move
+'''
 class Position:
     # the m,n coordinates should align with the size of the location they are in
     # for example the ship is 10x12 so the m,n coordinates should be in the range [0,0]-[9,11]
