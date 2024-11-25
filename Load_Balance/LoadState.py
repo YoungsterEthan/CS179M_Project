@@ -2,7 +2,7 @@ from Load_Balance.State import State
 from Load_Balance.Position import Position, Location
 from Move import Move
 from ContainerData import ContainerData
-from CS179M_Project.consts import SHIP_VIRTUAL_CELL, EST_COST
+from consts import SHIP_VIRTUAL_CELL, EST_COST
 import copy
 
 '''
