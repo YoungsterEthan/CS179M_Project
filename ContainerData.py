@@ -5,4 +5,6 @@ class ContainerData:
         self.weight = weight
 
     def __str__(self):
+        if self.name == "UNUSED":
+            return "crane"
         return self.name + " {" + self.weight + "}"
