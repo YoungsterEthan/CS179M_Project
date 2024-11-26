@@ -4,18 +4,20 @@ from consts import MAX_STATES, STATE_CULL, SHIP_HEIGHT, SHIP_WIDTH, SHIP_VIRTUAL
 import copy
 from collections import defaultdict
 from Load_Balance.Position import Position, Location
+from Manifest import Manifest
+from ContainerData import ContainerData
 
 ## The Loader class is responsible for loading and unloading containers
 ## Edits the manifest and saves the edited file using Manifest
 ## The edited manifest will be the result of completing all listed moves
 class Loader:
-    def __init__(self, manifest):
+    def __init__(self, manifest: Manifest):
         self.manifest = manifest
 
     ## Given a list of containers to load and a list of containers to unload
     ## return the Moves the operator needs to perform
     ## will update the manifest
-    def load_unload(self, containers_to_load, containers_to_unload):
+    def load_unload(self, containers_to_load: list[ContainerData], containers_to_unload: list[ContainerData]):
         states = self.make_starting_states(containers_to_load, containers_to_unload) # heap of states to search
 
         # informational data

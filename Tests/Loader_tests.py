@@ -9,7 +9,7 @@ from ContainerData import ContainerData
 
 class TestLoader(unittest.TestCase):
     def test_load(self):
-        manifest = Manifest("C:\\Users\\joey8\\Desktop\\CS SHIT\\CS179M_Project\\Tests\\test.txt")
+        manifest = Manifest("")
         loader = Loader(manifest)
         moves = loader.load_unload([
             ContainerData("Fish", "00152"),

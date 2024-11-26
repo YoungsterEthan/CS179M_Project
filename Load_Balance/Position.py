@@ -15,7 +15,7 @@ class Position:
     # the m,n coordinates should align with the size of the location they are in
     # for example the ship is 10x12 so the m,n coordinates should be in the range [0,0]-[9,11]
     # the 1x1 locations such as CRANE_REST and TRUCK should be in the range [0,0]x[0,0]
-    def __init__(self, location, mn=[0,0]):
+    def __init__(self, location: Location, mn=[0,0]):
         self.m = mn[0]
         self.n = mn[1]
         self.location = location
@@ -25,7 +25,7 @@ class Position:
 
     # moves from the current position to the given position
     # returns the previous position and the cost of this move
-    def move_to(self, pos):
+    def move_to(self, pos: 'Position'):
         # move within the same location is manhattan distance TODO: this assumes the locations are not blocked by some obstacle like a wall of containers blocking the path
         if self.location == pos.location:
             c = abs(self.m-pos.m) + abs(self.n-pos.n)

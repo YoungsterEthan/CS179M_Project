@@ -2,6 +2,7 @@ from Load_Balance.Position import Position, Location
 from ContainerData import ContainerData
 from consts import SHIP_HEIGHT, SHIP_WIDTH, SHIP_BUFF, BUFF_HEIGHT, BUFF_WIDTH, SHIP_VIRTUAL_CELL, BUFF_VIRTUAL_CELL
 import copy
+from Manifest import Manifest
 
 '''
     A unique State is:
@@ -20,7 +21,7 @@ import copy
 
 '''
 class State:
-    def __init__(self, manifest=None):
+    def __init__(self, manifest: Manifest = None):
         self.crane_position = Position(Location.CRANE_REST)
         self.moves = []
         self.g = 0
@@ -34,8 +35,8 @@ class State:
             self.build(manifest)
 
     # build the ship and buffer representation from the manifest
-    # build the ship and buffer height maps, gives quick acess to the highest container in each column
-    def build(self, manifest):
+    # build the ship and buffer height maps, gives quick access to the highest container in each column
+    def build(self, manifest: Manifest):
         # ship is 10x12 grid, the bottom left of the ship is at (0,0)
         # the top 2 rows are the ship_buff
         self.ship = [[ContainerData() for _ in range(SHIP_WIDTH)] for _ in range(SHIP_HEIGHT+SHIP_BUFF)]
@@ -68,7 +69,7 @@ class State:
         self.buffer_height_map = [BUFF_HEIGHT for _ in range(BUFF_WIDTH)]
     
     # given a list of containers return the first position in the list that has the given name
-    def contains_name(self, containers, name):
+    def contains_name(self, containers: ContainerData, name: str):
         for i,container in enumerate(containers):
             if container.name == name:
                 return i
@@ -76,14 +77,14 @@ class State:
     
     # given a list of positions and a position return true 
     # if the list contains a position with the same m,n coordinates
-    def contains_eq_pos(self, containers_pos, pos):
+    def contains_eq_pos(self, containers_pos: list[Position], pos: Position):
         for i in containers_pos:
             if i.m == pos.m and i.n == pos.n and i.location == pos.location:
                 return True
         return False
 
     # The distance the container would move if it were to be dropped at the current pos
-    def drop_container_at(self, pos, use_ship_buff):
+    def drop_container_at(self, pos: Position, use_ship_buff: bool):
         assert pos.in_ship() or pos.in_buf(), "Position must be in ship or buffer"
 
         d = 0
@@ -100,7 +101,7 @@ class State:
         if d == 0 and (pos.m == BUFF_HEIGHT if pos.in_buf() else pos.m == SHIP_HEIGHT+SHIP_BUFF):
             return float('inf')
         
-        # if we cannot use the ships buffer and the calulcated end position is in the ship buffer
+        # if we cannot use the ships buffer and the calculated end position is in the ship buffer
         if not use_ship_buff and pos.m-d >= SHIP_HEIGHT:
             return float('inf')
         
@@ -108,7 +109,7 @@ class State:
     
     # given a position return a list of containers above it
     # the containers are ordered bottom to top
-    def containers_above(self, pos):
+    def containers_above(self, pos: Position):
         containers = []
         for i in range(pos.m+1, SHIP_HEIGHT+SHIP_BUFF):
             if self.ship[i][pos.n].name != "UNUSED":
@@ -120,7 +121,7 @@ class State:
     # can toggle between considering the buffer or not, useful for loading as we dont want to load into the buffer
     # define search_h to give a heuristic cost of placing a container at a given position, unique to each subclass
     # if given a container do not swap and simply set the container at the best position
-    def search_swap(self, start_position, use_buffer, use_ship_buffer, search_h=lambda _: 0, container=None):
+    def search_swap(self, start_position: Position, use_buffer: bool, use_ship_buffer: bool, search_h = lambda _: 0, container: ContainerData = None):
         assert not (start_position.in_buf() and use_buffer), "Cannot start in buffer and use buffer"
 
         R = self.R_search(start_position, use_ship_buffer, search_h) # search on the right
@@ -159,7 +160,7 @@ class State:
     # search to the right of the given position to find the best place to drop a container
     # is inclusive of the starting position
     # define search_h to give a heuristic cost of placing a container at a given position
-    def R_search(self, start_position, use_ship_buffer, search_h):
+    def R_search(self, start_position: Position, use_ship_buffer: bool, search_h):
         curr_pos = copy.deepcopy(start_position)
 
         best_cost = float('inf')
@@ -203,7 +204,7 @@ class State:
     # search to the left of the given position to find the best place to drop a container
     # is not inclusive of the starting position
     # define search_h to give a heuristic cost of placing a container at a given position
-    def L_search(self, start_position, use_buffer, use_ship_buffer, search_h):
+    def L_search(self, start_position: Position, use_buffer: bool, use_ship_buffer: bool, search_h):
         curr_pos = copy.deepcopy(start_position)
 
         best_cost = float('inf')
