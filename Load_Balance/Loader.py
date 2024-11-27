@@ -6,6 +6,7 @@ from collections import defaultdict
 from Load_Balance.Position import Position, Location
 from Manifest import Manifest
 from ContainerData import ContainerData
+from typing import List
 
 ## The Loader class is responsible for loading and unloading containers
 ## Edits the manifest and saves the edited file using Manifest
@@ -17,7 +18,7 @@ class Loader:
     ## Given a list of containers to load and a list of containers to unload
     ## return the Moves the operator needs to perform
     ## will update the manifest
-    def load_unload(self, containers_to_load: list[ContainerData], containers_to_unload: list[ContainerData]):
+    def load_unload(self, containers_to_load: List[ContainerData], containers_to_unload: List[ContainerData]):
         states = self.make_starting_states(containers_to_load, containers_to_unload) # heap of states to search
 
         # informational data
@@ -41,6 +42,7 @@ class Loader:
             # if this is a goal state we found a good solution
             # with the current hueristic this is may not be optimal
             if(state.is_goal()):
+                self.update_manifest(state)
                 return state.moves
             
             (n_states, p) = state.next_states()
@@ -58,6 +60,7 @@ class Loader:
 
                 states = n_states
 
+        print("(Loader)WARNING: No solution found")
         return []
 
     # a map of containers names to the set of positions they are in
@@ -91,12 +94,24 @@ class Loader:
             
             container = containers_to_unload.pop()
             for pos in unload_map[container.name]:
+                unload_map[container.name].remove(pos)
                 curr.append(pos)
                 permute(containers_to_unload, curr)
                 curr.pop()
+                unload_map[container.name].add(pos)
 
             containers_to_unload.append(container)
 
         permute(containers_to_unload, [])
 
         return states
+    
+    def update_manifest(self, state):
+        for i,row in enumerate(state.ship):
+            if i >= SHIP_HEIGHT:
+                break
+            for j,container in enumerate(row):
+                if container:
+                    self.manifest.set_at(i+1, j+1, container)
+
+        self.manifest.save()

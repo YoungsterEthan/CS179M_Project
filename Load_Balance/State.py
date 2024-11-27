@@ -2,7 +2,9 @@ from Load_Balance.Position import Position, Location
 from ContainerData import ContainerData
 from consts import SHIP_HEIGHT, SHIP_WIDTH, SHIP_BUFF, BUFF_HEIGHT, BUFF_WIDTH, SHIP_VIRTUAL_CELL, BUFF_VIRTUAL_CELL
 import copy
+from typing import List
 from Manifest import Manifest
+from Move import Move
 
 '''
     A unique State is:
@@ -30,6 +32,10 @@ class State:
         self.ship_height_map = []
         self.buffer = []
         self.buffer_height_map = []
+
+        # track the Positions of containers in the buffer and ship buff
+        self.containers_in_buff = []
+        self.containers_in_ship_buff = []
 
         if manifest is not None:
             self.build(manifest)
@@ -69,7 +75,7 @@ class State:
         self.buffer_height_map = [BUFF_HEIGHT for _ in range(BUFF_WIDTH)]
     
     # given a list of containers return the first position in the list that has the given name
-    def contains_name(self, containers: ContainerData, name: str):
+    def contains_name(self, containers: List[ContainerData], name: str):
         for i,container in enumerate(containers):
             if container.name == name:
                 return i
@@ -77,7 +83,7 @@ class State:
     
     # given a list of positions and a position return true 
     # if the list contains a position with the same m,n coordinates
-    def contains_eq_pos(self, containers_pos: list[Position], pos: Position):
+    def contains_eq_pos(self, containers_pos: List[Position], pos: Position):
         for i in containers_pos:
             if i.m == pos.m and i.n == pos.n and i.location == pos.location:
                 return True
@@ -116,46 +122,68 @@ class State:
                 containers.append(Position(Location.SHIP, [i, pos.n]))
         return containers
 
-    # find the best position to place a container given the starting position that is not the starting 
-    # position and swap the container at the starting position with the container at the best position
+    # find the best position to place a container given the starting position 
+    # and swap the container at the starting position with the container at the best position
     # can toggle between considering the buffer or not, useful for loading as we dont want to load into the buffer
     # define search_h to give a heuristic cost of placing a container at a given position, unique to each subclass
     # if given a container do not swap and simply set the container at the best position
     def search_swap(self, start_position: Position, use_buffer: bool, use_ship_buffer: bool, search_h = lambda _: 0, container: ContainerData = None):
         assert not (start_position.in_buf() and use_buffer), "Cannot start in buffer and use buffer"
+        # if start_position == Position(Location.SHIP, [2,1]) and self.ship[1][0].name != "UNUSED":
+        #     print("hello")
 
         R = self.R_search(start_position, use_ship_buffer, search_h) # search on the right
         L = self.L_search(start_position, use_buffer, use_ship_buffer, search_h) # search on the left
 
-        c = R[0] if R[1] < L[1] else L[0] # choose the best position
+        p = R[0] if R[1] < L[1] else L[0] # choose the best position
+        c = R[1] if R[1] < L[1] else L[1] # cost of moving to the best position
+        if c == float('inf'): # if the cost is infinite then we cannot place the container at this position
+            return (start_position, c)
 
-        self.crane_position = c # move the crane to the best position
+        self.crane_position = p # move the crane to the best position
 
         # if we are not swapping then set container
         if container:
-            self.ship[c.m][c.n] = container
-            self.ship_height_map[c.n] -= 1
-            return (start_position, R[1] if R[1] < L[1] else L[1])
+            # if p.in_ship_buff(): # save this position in the list of containers in ship buff
+            #     self.containers_in_ship_buff.append(p)
+            # elif p.in_buf(): # save this position in the list of containers in buffer
+            #     self.containers_in_buff.append(p)
+
+            self.ship[p.m][p.n] = container
+            self.ship_height_map[p.n] -= 1
+            return (start_position, c)
         
         # else swap the containers
-        if start_position.in_ship() and c.in_ship():  # swap in ship
-            self.ship[start_position.m][start_position.n], self.ship[c.m][c.n] = self.ship[c.m][c.n], self.ship[start_position.m][start_position.n]
+        if start_position.in_ship() and p.in_ship():  # swap in ship
+            self.ship[start_position.m][start_position.n], self.ship[p.m][p.n] = self.ship[p.m][p.n], self.ship[start_position.m][start_position.n]
             self.ship_height_map[start_position.n] += 1
-            self.ship_height_map[c.n] -= 1
-        elif start_position.in_ship() and c.in_buf(): # swap from ship to buffer
-            self.ship[start_position.m][start_position.n], self.buffer[c.m][c.n] = self.buffer[c.m][c.n], self.ship[start_position.m][start_position.n]
+            self.ship_height_map[p.n] -= 1
+        elif start_position.in_ship() and p.in_buf(): # swap from ship to buffer
+            self.ship[start_position.m][start_position.n], self.buffer[p.m][p.n] = self.buffer[p.m][p.n], self.ship[start_position.m][start_position.n]
             self.ship_height_map[start_position.n] += 1
-            self.buffer_height_map[c.n] -= 1
-        elif start_position.in_buf() and c.in_ship(): # swap from buffer to ship
-            self.buffer[start_position.m][start_position.n], self.ship[c.m][c.n] = self.ship[c.m][c.n], self.buffer[start_position.m][start_position.n]
+            self.buffer_height_map[p.n] -= 1
+        elif start_position.in_buf() and p.in_ship(): # swap from buffer to ship
+            self.buffer[start_position.m][start_position.n], self.ship[p.m][p.n] = self.ship[p.m][p.n], self.buffer[start_position.m][start_position.n]
             self.buffer_height_map[start_position.n] += 1
-            self.ship_height_map[c.n] -= 1
+            self.ship_height_map[p.n] -= 1
         else:                                         # swap in buffer
-            self.buffer[start_position.m][start_position.n], self.buffer[c.m][c.n] = self.buffer[c.m][c.n], self.buffer[start_position.m][start_position.n]
+            self.buffer[start_position.m][start_position.n], self.buffer[p.m][p.n] = self.buffer[p.m][p.n], self.buffer[start_position.m][start_position.n]
             self.buffer_height_map[start_position.n] += 1
-            self.buffer_height_map[c.n] -= 1
+            self.buffer_height_map[p.n] -= 1
 
-        return (start_position, R[1] if R[1] < L[1] else L[1])
+        return (start_position, c)
+    
+    # find the best position to place a container given the starting position
+    def search(self, start_position: Position, use_buffer: bool, use_ship_buffer: bool, search_h = lambda _: 0):
+        assert not (start_position.in_buf() and use_buffer), "Cannot start in buffer and use buffer"
+        
+        R = self.R_search(start_position, use_ship_buffer, search_h) # search on the right
+        L = self.L_search(start_position, use_buffer, use_ship_buffer, search_h) # search on the left
+        
+        p = R[0] if R[1] < L[1] else L[0] # choose the best position
+        c = R[1] if R[1] < L[1] else L[1] # cost of moving to the best position
+
+        return (p, c)
 
     # search to the right of the given position to find the best place to drop a container
     # is inclusive of the starting position
@@ -171,7 +199,8 @@ class State:
         while(True):
             drop_dist = self.drop_container_at(curr_pos, use_ship_buffer) # cost of dropping the container at this position
             h = search_h(curr_pos) # heuristic cost of placing this container here
-            if start_position.m != curr_pos.m-drop_dist and dist+drop_dist+h < best_cost+best_h: # update best when we are not at the start position and the cost is less than the best cost
+            is_not_start = (start_position.m != curr_pos.m-drop_dist or start_position.n != curr_pos.n or start_position.location != curr_pos.location)
+            if is_not_start and dist+drop_dist+h < best_cost+best_h: # update best when we are not at the start position and the cost is less than the best cost
                 best_cost = dist+drop_dist
                 best_h = h
                 best_pos = copy.deepcopy(curr_pos)
@@ -183,21 +212,35 @@ class State:
             if (curr_pos.in_ship() and on_edge) or dist > best_cost+best_h:
                 break
 
-            if curr_pos.in_buf() and on_edge:
-                blocked = curr_pos.m < BUFF_HEIGHT and self.buffer[curr_pos.m][curr_pos.n].name != "UNUSED" # position at buff_width or there is a container in the way
+            if on_edge:
+                (_,c) = curr_pos.move_to(Position(Location.SHIP, SHIP_VIRTUAL_CELL))
+                dist += c
+                continue
+
+            dist += 1
+
+            blocked = False
+            if curr_pos.in_buf():
+                blocked = curr_pos.m < BUFF_HEIGHT and (not self.buffer[curr_pos.m][curr_pos.n] or self.buffer[curr_pos.m][curr_pos.n].name != "UNUSED") # position at buff_width or there is a container in the way
             else:
-                blocked = curr_pos.m < SHIP_HEIGHT+SHIP_BUFF and self.ship[curr_pos.m][curr_pos.n].name != "UNUSED" # container in the way, position at ship_width already checked
-            
-            if blocked or on_edge: # something is stopping us from moving right
-                if curr_pos.in_buf_virtual_cell(): # reached the top right of the buffer use the virtual cell to get to the ship
-                    (_,c) = curr_pos.move_to(Position(Location.SHIP, SHIP_VIRTUAL_CELL))
-                    dist += c
-                else:
-                    bad = curr_pos.move_up() # move curr pos up
-                    dist += 1 # cost of moving up
-                    assert bad, "Condition for virtual cell incorrect, or hit top before hitting right"
-            else:
-                dist += 1 # cost of moving right
+                blocked = curr_pos.m < SHIP_HEIGHT+SHIP_BUFF and (not self.ship[curr_pos.m][curr_pos.n] or self.ship[curr_pos.m][curr_pos.n].name != "UNUSED") # container in the way, position at ship_width already checked
+
+            if blocked:
+                while blocked:
+                    curr_pos.move_up()
+                    dist += 1
+                    if curr_pos.in_buf():
+                        blocked = curr_pos.m < BUFF_HEIGHT and (not self.buffer[curr_pos.m][curr_pos.n] or self.buffer[curr_pos.m][curr_pos.n].name != "UNUSED")
+                    else:
+                        blocked = curr_pos.m < SHIP_HEIGHT+SHIP_BUFF and (not self.ship[curr_pos.m][curr_pos.n] or self.ship[curr_pos.m][curr_pos.n].name != "UNUSED")
+
+                drop_dist = self.drop_container_at(curr_pos, use_ship_buffer)
+                h = search_h(curr_pos)
+                is_not_start = (start_position.m != curr_pos.m-drop_dist or start_position.n != curr_pos.n or start_position.location != curr_pos.location)
+                if is_not_start and dist+drop_dist+h < best_cost+best_h:
+                    best_cost = dist
+                    best_h = h
+                    best_pos = copy.deepcopy(curr_pos)
 
         return (best_pos, best_cost)
     
@@ -220,33 +263,116 @@ class State:
             if (curr_pos.in_buf() and on_edge) or dist+h > best_cost+best_h:
                 break
 
-            if curr_pos.in_ship() and on_edge:
-                blocked = curr_pos.m < SHIP_HEIGHT+SHIP_BUFF and self.ship[curr_pos.m][curr_pos.n].name != "UNUSED"
-            else:
-                blocked = curr_pos.m < BUFF_HEIGHT and self.buffer[curr_pos.m][curr_pos.n].name != "UNUSED"
-            
-            if blocked or on_edge: # something is stopping us from moving left
-                if curr_pos.in_ship_virtual_cell(): # reached the top left of the ship use the virtual cell to get to the buffer
-                    if not use_buffer:
-                        break
+            if on_edge:
+                if use_buffer:
                     (_,c) = curr_pos.move_to(Position(Location.BUFFER, BUFF_VIRTUAL_CELL))
-                    dist += c-1 # remove 1 because we will add 1 below
+                    dist += c-1
                 else:
-                    bad = curr_pos.move_up() # move curr pos up
-                    dist += 1 # cost of moving up
-                    assert bad, "Condition for virtual cell incorrect, or hit top before hitting left"
-                    continue
+                    break
 
-            dist += 1 # cost of moving left
+            dist += 1
+
+            if curr_pos.in_ship():
+                blocked = curr_pos.m < SHIP_HEIGHT+SHIP_BUFF and (not self.ship[curr_pos.m][curr_pos.n] or self.ship[curr_pos.m][curr_pos.n].name != "UNUSED")
+            else:
+                blocked = curr_pos.m < BUFF_HEIGHT and (not self.buffer[curr_pos.m][curr_pos.n] or self.buffer[curr_pos.m][curr_pos.n].name != "UNUSED")
+
+            if blocked:
+                while blocked:
+                    curr_pos.move_up()
+                    dist += 1
+                    if curr_pos.in_ship():
+                        blocked = curr_pos.m < SHIP_HEIGHT+SHIP_BUFF and (not self.ship[curr_pos.m][curr_pos.n] or self.ship[curr_pos.m][curr_pos.n].name != "UNUSED")
+                    else:
+                        blocked = curr_pos.m < BUFF_HEIGHT and (not self.buffer[curr_pos.m][curr_pos.n] or self.buffer[curr_pos.m][curr_pos.n].name != "UNUSED")
+
+                drop_dist = self.drop_container_at(curr_pos, use_ship_buffer)
+                h = search_h(curr_pos)
+                is_not_start = (start_position.m != curr_pos.m-drop_dist or start_position.n != curr_pos.n or start_position.location != curr_pos.location)
+                if is_not_start and dist+drop_dist+h < best_cost+best_h:
+                    best_cost = dist
+                    best_h = h
+                    best_pos = copy.deepcopy(curr_pos)
+
+                continue
+
             drop_dist = self.drop_container_at(curr_pos, use_ship_buffer) # cost of dropping the container at this position
             h = search_h(curr_pos) # heuristic cost of placing this container here
-            if start_position.m != curr_pos.m-drop_dist and dist+drop_dist+h < best_cost+best_h: # update best when we are not at the start position and the cost is less than the best cost
+            is_not_start = (start_position.m != curr_pos.m-drop_dist or start_position.n != curr_pos.n or start_position.location != curr_pos.location)
+            if is_not_start and dist+drop_dist+h < best_cost+best_h: # update best when we are not at the start position and the cost is less than the best cost
                 best_cost = dist+drop_dist
                 best_h = h
                 best_pos = copy.deepcopy(curr_pos)
                 best_pos.m -= drop_dist
 
         return (best_pos, best_cost)
+    
+    def next_remove_buffer_states(self, states):
+        pruned = 0
+        while self.containers_in_buff:
+            pos = self.containers_in_buff.pop()
+            state = copy.deepcopy(self)
+            container = state.buffer[pos.m][pos.n]
+            state.buffer[pos.m][pos.n] = ContainerData()
+            
+            # move to this container
+            (prev, cs) = state.crane_position.move_to(Position(Location.BUFFER, pos))
+            state.moves.append(Move(prev, Position(Location.BUFFER, [pos.m, pos.n]), cs, container))
+            state.g += cs
+
+            # move to the ship
+            (prev, cm) = state.crane_position.move_to(Position(Location.SHIP, SHIP_VIRTUAL_CELL))
+            state.g += cm
+            
+            # drop container
+            (_, cd) = state.search_swap(state.crane_position, False, False, state.unloading_containers_below, container)
+            state.g += cd
+
+            # save move from buffer to ship position
+            state.moves.append(Move(prev, Position(Location.SHIP, [state.crane_position.m, state.crane_position.n]), cm+cd, container))
+            
+            # if we cant drop the container then prune this state
+            if cd == float('inf'):
+                pruned += 1
+                continue
+
+            states.append(state)
+
+        return pruned
+
+    def next_remove_ship_buffer_states(self, states):
+        pruned = 0
+        for i in range(len(self.containers_in_ship_buff)):
+            state = copy.deepcopy(self)
+            state.containers_in_ship_buff = state.containers_in_ship_buff[:i] + state.containers_in_ship_buff[i+1:]
+            pos = self.containers_in_ship_buff[i]
+            container = state.ship[pos.m][pos.n]
+            state.ship[pos.m][pos.n] = ContainerData()
+
+            if len(self.containers_above(pos)) > 0:
+                pruned += 1
+                continue
+            
+            # move to this container
+            (prev, cs) = state.crane_position.move_to(Position(Location.SHIP, [pos.m, pos.n]), self.ship)
+            state.moves.append(Move(prev, Position(Location.SHIP, [pos.m, pos.n]), cs))
+            state.g += cs
+            
+            # drop container
+            (prev, cd) = state.search_swap(state.crane_position, False, False, state.unloading_containers_below, container)
+            state.g += cd
+
+            # save move from buffer to ship position
+            state.moves.append(Move(prev, Position(Location.SHIP, [state.crane_position.m, state.crane_position.n]), cd, container))
+            
+            # if we cant drop the container then prune this state
+            if cd == float('inf'):
+                pruned += 1
+                continue
+
+            states.append(state)
+
+        return pruned
 
 
     # comparison for heapq

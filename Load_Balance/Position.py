@@ -1,11 +1,13 @@
 from consts import SHIP_HEIGHT, SHIP_WIDTH, SHIP_BUFF, BUFF_HEIGHT, BUFF_WIDTH, SHIP_VIRTUAL_CELL, BUFF_VIRTUAL_CELL
 import copy
+from typing import List
+from ContainerData import ContainerData
 
 class Location:
-    SHIP = "ship"
-    BUFFER = "buffer"
-    TRUCK = "truck"
-    CRANE_REST = "crane_rest"
+    SHIP = "SHIP"
+    BUFFER = "BUFFER"
+    TRUCK = "TRUCK"
+    CRANE_REST = "CRANE_REST"
 
 '''
     Position class represents a position in different locations
@@ -20,15 +22,50 @@ class Position:
         self.n = mn[1]
         self.location = location
 
-    # def __eq__(self, value):
-    #     return self.m == value.m and self.n == value.n and self.location == value.location
+    def __eq__(self, value):
+        return self.m == value.m and self.n == value.n and self.location == value.location
+    
+    def __hash__(self) -> int:
+        return hash((self.m, self.n, self.location))
 
     # moves from the current position to the given position
     # returns the previous position and the cost of this move
-    def move_to(self, pos: 'Position'):
-        # move within the same location is manhattan distance TODO: this assumes the locations are not blocked by some obstacle like a wall of containers blocking the path
+    def move_to(self, pos: 'Position', loc: List[ContainerData] = None):
+        old_p = copy.deepcopy(self)
+        
+        # move within the same location
         if self.location == pos.location:
-            c = abs(self.m-pos.m) + abs(self.n-pos.n)
+            assert self.location == Location.SHIP or self.location == Location.BUFFER, "Invalid move, " + self.location + " is not big enough for a move"
+            in_virtual = self.in_ship_virtual_cell() or self.in_buf_virtual_cell() or pos.in_ship_virtual_cell() or pos.in_buf_virtual_cell()
+            if in_virtual or loc == None:
+                if not in_virtual: # if either location is a virtual cell the manhattan distance actually is correct
+                    print("(move_to)WARNING: No location data provided for move within the same location, assuming a manhattan distance")
+                c = abs(self.m - pos.m) + abs(self.n - pos.n)
+            else:
+                n_p = copy.deepcopy(pos)
+                c_p = copy.deepcopy(self)
+                # if pos is to the left swap them
+                if c_p.n > n_p.n:
+                    c_p, n_p = n_p, c_p
+
+                c = 0
+
+                # move right
+                while c_p.n != n_p.n and c_p.move_right():
+                    c += 1
+
+                    if c_p.location == Location.BUFFER:
+                        t = BUFF_HEIGHT
+                    else:
+                        t = SHIP_HEIGHT
+
+                    while c_p.m < t and loc[c_p.m][c_p.n].name != "UNUSED":
+                        c += 1
+                        c_p.move_up()
+                
+                # c_p and n_p are in the same horizontal position
+                # move to n_p vertically
+                c += abs(c_p.m - n_p.m)
 
         # move between ship and buffer is 4 plus manhattan distance to/from their virtual cells
         elif self.in_ship() and pos.in_buf():
@@ -69,14 +106,12 @@ class Position:
         else:
             assert False, "Invalid move"
 
-        old_p = copy.deepcopy(self)
-
         # apply this move
         self.m = pos.m
         self.n = pos.n
         self.location = pos.location
         
-        # return the cost of this move
+        # return the prev pos and cost of this move
         return (old_p, c)
 
     def is_virtual_cell(self):
@@ -93,6 +128,9 @@ class Position:
     
     def in_ship(self):
         return self.location == Location.SHIP
+    
+    def in_ship_buff(self):
+        return self.location == Location.SHIP and self.m >= SHIP_HEIGHT
 
     def in_truck(self):
         return self.location == Location.TRUCK
