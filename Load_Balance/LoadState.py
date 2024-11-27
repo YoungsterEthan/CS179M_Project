@@ -2,7 +2,7 @@ from Load_Balance.State import State
 from Load_Balance.Position import Position, Location
 from Move import Move
 from ContainerData import ContainerData
-from consts import SHIP_VIRTUAL_CELL, BUFF_VIRTUAL_CELL, EST_COST, BUFF_HEIGHT, BUFF_WIDTH, SHIP_BUFF, SHIP_WIDTH, SHIP_HEIGHT
+from consts import SHIP_VIRTUAL_CELL, BUFF_VIRTUAL_CELL, EST_COST
 import copy
 
 '''
@@ -17,8 +17,8 @@ import copy
     the heuristic of a state is 
         manhattan distance of each container to unload
         distance to load any container
-        and the EST_COST of each container in the buffer
-        and the EST_COST of each container in the ship buffer
+        distance to move each container out of the buffer
+        distance to move each container out of the buffer zone in the ship
 '''
 class LoadState(State):
     def __init__(self, containers_to_load=[], containers_to_unload=[], manifest=None):

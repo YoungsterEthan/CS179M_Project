@@ -115,3 +115,8 @@ class Loader:
                     self.manifest.set_at(i+1, j+1, container)
 
         self.manifest.save()
+
+        # final crane move to rest pos
+        (p, c) = state.crane_position.move_to(Position(Location.CRANE_REST))
+        state.g += c
+        state.moves.append((p, state.crane_position, c))
