@@ -1,4 +1,3 @@
-import numpy as np
 from ContainerData import ContainerData
 from Logger import Logger
 ## Manifest is the interface for interacting with the manifest file
@@ -8,11 +7,12 @@ class Manifest:
         self.manifest_path = manifest_path
         self.manifest_name = txtfile
         self.ContainerMatrix = []
+        self.log = Logger()
 
     ## read the manifest file at manifest_path
     ## and store the data in manifest for future use
     def read_manifest(self):
-        with open("./Manifests/"+ self.manifest_name + ".txt", 'r') as f:
+        with open(self.manifest_path + self.manifest_name + ".txt", 'r') as f:
             List = [line.strip() for line in f]
         
         WeightList = []
@@ -37,8 +37,7 @@ class Manifest:
             ContainerMatrix.append(ContainerRow)
         
         self.ContainerMatrix = ContainerMatrix
-        Log.log_open_manifest(self)
-        pass
+        self.log.log_open_manifest(self)
 
     ## Determine if a position is NAN
     def is_NAN(self, x, y):
@@ -46,21 +45,16 @@ class Manifest:
             return True
         else:
             return False
-        pass
 
     ## Get the ContainerData at a position in the grid
     def data_at(self, x, y):
         weight = self.ContainerMatrix[x - 1][y - 1].weight
         weight = weight[1:-1]
 
-        while(weight[0] == "0"):
-            weight = weight[1:]
-
         weight = int(weight)
 
         container = ContainerData(self.ContainerMatrix[x - 1][y - 1].name, weight)
         return container
-        pass
 
     ## Set the ContainerData at a position in the grid
     def set_at(self, x, y, container_data):
@@ -72,7 +66,6 @@ class Manifest:
         weight = '{' + weight + '}'
 
         self.ContainerMatrix[x - 1][y - 1].weight = weight
-        pass
     
     def container_amount(self):
         sum = 0
@@ -90,7 +83,6 @@ class Manifest:
         position = ""
         weight = "{00000}"
         name = "UNUSED"
-        iterator = 0
         for x in range(1, 9):
             storex = x
             for y in range(1, 13):
@@ -107,46 +99,7 @@ class Manifest:
                 position = "[" + x + ',' + y + "]"
                 OutboundList.append(position + ", " + weight + ", " + name + "\n")
 
-        with open('./Manifests/' + self.manifest_name + 'OUTBOUND.txt', 'w') as f:
+        with open(self.manifest_path + self.manifest_name + 'OUTBOUND.txt', 'w') as f:
             for i in OutboundList:
                 f.write(i)
-        Log.log_close_manifest(self)
-        pass
-
-
-Log = Logger()
-
-#testing log features
-Log.log_comment("Comment: Hello log file")
-Log.log_sign_in("John Smith")
-Log.log_sign_in("Anil Patel")
-
-path = "./Manifests/examplemanifest.txt" #change this line to input later
-txtfile = path.replace(".txt", "")
-txtfile = txtfile.replace("./Manifests/", "")
-
-#test declaration and read
-p = Manifest(path, txtfile);
-p.read_manifest()
-
-
-#test data at
-container = p.data_at(1,1)
-print("name: " , container.name)
-print("weight: ", container.weight)
-
-#test set at
-newcontainer = ContainerData("John's shrimp and stuff" , 231)
-p.set_at(1, 4, newcontainer)
-container2 = p.data_at(1,4)
-print("name: " , container2.name)
-print("weight: ", container2.weight)
-
-#test is NAN
-if(p.is_NAN(1, 1)):
-    print("(1, 1) is NAN")
-if(p.is_NAN(1, 12)):
-    print("(1, 12) is NAN")
-
-#test save
-p.save()
+        self.log.log_close_manifest(self)

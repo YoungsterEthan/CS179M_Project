@@ -1,0 +1,5 @@
+2024-11-27 13:47 Comment: Hello log file
+2024-11-27 13:47 John Smith signs in
+2024-11-27 13:47 John Smith signs out
+2024-11-27 13:47 Anil Patel signs in
+2024-11-27 13:47 Manifest test_manifest.txt is opened, there are 9 containers on the ship

@@ -1,6 +1,0 @@
-2024-11-22 21:02 Comment: Hello log file
-2024-11-22 21:02 John Smith signs in
-2024-11-22 21:02 John Smith signs out
-2024-11-22 21:02 Anil Patel signs in
-2024-11-22 21:02 Manifest examplemanifest.txt is opened, there are 4 containers on the ship
-2024-11-22 21:02 Finishes a cycle. Manifest examplemanifestOUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
