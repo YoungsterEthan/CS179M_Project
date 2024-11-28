@@ -7,6 +7,7 @@ from Load_Balance.Position import Position, Location
 from Manifest import Manifest
 from ContainerData import ContainerData
 from typing import List
+from Move import Move
 
 ## The Loader class is responsible for loading and unloading containers
 ## Edits the manifest and saves the edited file using Manifest
@@ -119,4 +120,4 @@ class Loader:
         # final crane move to rest pos
         (p, c) = state.crane_position.move_to(Position(Location.CRANE_REST))
         state.g += c
-        state.moves.append((p, state.crane_position, c))
+        state.moves.append(Move(p, state.crane_position, c))

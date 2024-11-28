@@ -7,7 +7,7 @@ SHIP_BUFF = 2   # height of the extra space above the ship
 SHIP_VIRTUAL_CELL = [SHIP_HEIGHT+SHIP_BUFF, 0]  # location of the virtual cell for the ship
 BUFF_VIRTUAL_CELL = [BUFF_HEIGHT, BUFF_WIDTH-1] # location of the virtual cell for the buffer
 
-MAX_STATES = 3000 # max number of states to keep in the heap
+MAX_STATES = float('inf') # max number of states to keep in the heap
 STATE_CULL = 100  # number of states to keep when culling the heap
 
 EST_COST = 20 # estimated cost to move the crane from the truck to the ship and back to the truck

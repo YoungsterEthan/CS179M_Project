@@ -1,0 +1,13 @@
+2024-11-27 16:50 Manifest full_manifest.txt is opened, there are 80 containers on the ship
+2024-11-27 16:50 Manifest test_manifest.txt is opened, there are 9 containers on the ship
+2024-11-27 16:52 Manifest full_manifest.txt is opened, there are 80 containers on the ship
+2024-11-27 16:52 Manifest test_manifest.txt is opened, there are 9 containers on the ship
+2024-11-27 16:55 Manifest full_manifest.txt is opened, there are 80 containers on the ship
+2024-11-27 16:55 Manifest test_manifest.txt is opened, there are 9 containers on the ship
+2024-11-27 16:57 Manifest test_manifest.txt is opened, there are 9 containers on the ship
+2024-11-27 16:59 Manifest test_manifest.txt is opened, there are 9 containers on the ship
+2024-11-27 17:01 Manifest test_manifest.txt is opened, there are 9 containers on the ship
+2024-11-27 17:03 Manifest test_manifest.txt is opened, there are 9 containers on the ship
+2024-11-27 17:19 Manifest full_manifest.txt is opened, there are 80 containers on the ship
+2024-11-27 18:01 Manifest full_manifest.txt is opened, there are 80 containers on the ship
+2024-11-27 18:02 Manifest full_manifest.txt is opened, there are 80 containers on the ship

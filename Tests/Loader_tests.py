@@ -9,7 +9,7 @@ from ContainerData import ContainerData
 
 class TestLoader(unittest.TestCase):
     def setUp(self):
-        self.path = os.path.dirname(os.path.abspath(__file__)) + "\\..\\Manifests\\"
+        self.path = os.path.dirname(os.path.abspath(__file__)) + "/../Manifests/"
 
     def test_load(self):
         manifest = Manifest(self.path, "test_manifest")
@@ -38,6 +38,8 @@ class TestLoader(unittest.TestCase):
             print(move)
         print("Total time: " + str(time))
 
+        assert time <= 269 # 234 is the best possible time + 15% margin of error
+
     def test_full(self):
         manifest = Manifest(self.path, "full_manifest")
         manifest.read_manifest()
@@ -54,6 +56,8 @@ class TestLoader(unittest.TestCase):
             time += move.time_to_move
             print(move)
         print("Total time: " + str(time))
+
+        assert time <= 434 # 378 is the best possible time + 15% margin of error
 
 if __name__ == "__main__":
     print("Running Loader tests")

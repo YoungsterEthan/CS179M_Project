@@ -13,7 +13,7 @@ class Logger:
         pst = timezone(timedelta(hours=-8))
         now = datetime.now(pst)
         self.logname = "KeoghsPort" + str(now.strftime("%Y")) +  ".txt"
-        self.logpath = os.path.dirname(os.path.abspath(__file__)) + "\\Logs\\"
+        self.logpath = os.path.dirname(os.path.abspath(__file__)) + "/Logs/"
         self.currentoperator = ""
 
     ## Log a move that was made by the operator
