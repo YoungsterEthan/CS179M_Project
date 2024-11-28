@@ -156,12 +156,6 @@ class LoadState(State):
             else:
                 self.moves.append(Move(prev, copy.deepcopy(self.crane_position), cd, self.buffer[self.crane_position.m][self.crane_position.n]))
 
-            # if the position we moved container to in the ship buf or buf add it to respective lists
-            if self.crane_position.in_ship_buff():
-                self.containers_in_ship_buff.append(copy.deepcopy(self.crane_position))
-            elif self.crane_position.in_buf():
-                self.containers_in_buff.append(copy.deepcopy(self.crane_position))
-
         # move crane to pos
         (prev, cu) = self.crane_position.move_to(pos, self.ship)
         cost += cu

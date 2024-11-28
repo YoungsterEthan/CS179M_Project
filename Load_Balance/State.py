@@ -142,13 +142,14 @@ class State:
 
         self.crane_position = p # move the crane to the best position
 
+        # if the position we moved container to in the ship buf or buf add it to respective lists
+        if self.crane_position.in_ship_buff():
+            self.containers_in_ship_buff.append(copy.deepcopy(self.crane_position))
+        elif self.crane_position.in_buf():
+            self.containers_in_buff.append(copy.deepcopy(self.crane_position))
+
         # if we are not swapping then set container
         if container:
-            # if p.in_ship_buff(): # save this position in the list of containers in ship buff
-            #     self.containers_in_ship_buff.append(p)
-            # elif p.in_buf(): # save this position in the list of containers in buffer
-            #     self.containers_in_buff.append(p)
-
             self.ship[p.m][p.n] = container
             self.ship_height_map[p.n] -= 1
             return (start_position, c)
