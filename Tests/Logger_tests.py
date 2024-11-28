@@ -11,7 +11,7 @@ class TestLogger(unittest.TestCase):
     def setUp(self):
         self.log = Logger()
         self.log.logname = "testlog.txt"
-        self.manifests_path = os.path.dirname(os.path.abspath(__file__)) + "\\..\\Manifests\\"
+        self.manifests_path = os.path.dirname(os.path.abspath(__file__)) + "/../Manifests/"
 
     def test_logs(self):
         os.remove(self.log.logpath + self.log.logname)
