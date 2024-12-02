@@ -1,13 +1,14 @@
-2024-11-27 16:50 Manifest full_manifest.txt is opened, there are 80 containers on the ship
-2024-11-27 16:50 Manifest test_manifest.txt is opened, there are 9 containers on the ship
-2024-11-27 16:52 Manifest full_manifest.txt is opened, there are 80 containers on the ship
-2024-11-27 16:52 Manifest test_manifest.txt is opened, there are 9 containers on the ship
-2024-11-27 16:55 Manifest full_manifest.txt is opened, there are 80 containers on the ship
-2024-11-27 16:55 Manifest test_manifest.txt is opened, there are 9 containers on the ship
-2024-11-27 16:57 Manifest test_manifest.txt is opened, there are 9 containers on the ship
-2024-11-27 16:59 Manifest test_manifest.txt is opened, there are 9 containers on the ship
-2024-11-27 17:01 Manifest test_manifest.txt is opened, there are 9 containers on the ship
-2024-11-27 17:03 Manifest test_manifest.txt is opened, there are 9 containers on the ship
-2024-11-27 17:19 Manifest full_manifest.txt is opened, there are 80 containers on the ship
-2024-11-27 18:01 Manifest full_manifest.txt is opened, there are 80 containers on the ship
-2024-11-27 18:02 Manifest full_manifest.txt is opened, there are 80 containers on the ship
+2024-12-01 21:19 Manifest ShipCase2.txt is opened, there are 4 containers on the ship
+2024-12-01 21:19 Finishes a cycle. Manifest ShipCase2OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-01 21:19 Manifest ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-01 21:19 Finishes a cycle. Manifest ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-01 21:19 Manifest ShipCase4.txt is opened, there are 7 containers on the ship
+2024-12-01 21:19 Finishes a cycle. Manifest ShipCase4OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-01 21:19 Manifest ShipCase5.txt is opened, there are 5 containers on the ship
+2024-12-01 21:19 Finishes a cycle. Manifest ShipCase5OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-01 21:19 Manifest full_manifest.txt is opened, there are 80 containers on the ship
+2024-12-01 21:19 Finishes a cycle. Manifest full_manifestOUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-01 21:19 Manifest test_manifest.txt is opened, there are 9 containers on the ship
+2024-12-01 21:20 Finishes a cycle. Manifest test_manifestOUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-01 21:20 Manifest ShipCase1.txt is opened, there are 2 containers on the ship
+2024-12-01 21:20 Finishes a cycle. Manifest ShipCase1OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed

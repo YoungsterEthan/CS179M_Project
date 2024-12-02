@@ -129,8 +129,6 @@ class State:
     # if given a container do not swap and simply set the container at the best position
     def search_swap(self, start_position: Position, use_buffer: bool, use_ship_buffer: bool, search_h = lambda _: 0, container: ContainerData = None):
         assert not (start_position.in_buf() and use_buffer), "Cannot start in buffer and use buffer"
-        # if start_position == Position(Location.SHIP, [2,1]) and self.ship[1][0].name != "UNUSED":
-        #     print("hello")
 
         R = self.R_search(start_position, use_ship_buffer, search_h) # search on the right
         L = self.L_search(start_position, use_buffer, use_ship_buffer, search_h) # search on the left

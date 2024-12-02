@@ -35,7 +35,7 @@ class Logger:
             f.write(get_time() + "Manifest "+ manifest.manifest_name + ".txt is opened, there are "+ str(manifest.container_amount()) + " containers on the ship\n")
 
     def log_close_manifest(self, manifest):
-        with open(self.logname, 'a') as f:
+        with open(self.logpath + self.logname, 'a+') as f:
             f.write(get_time() + "Finishes a cycle. Manifest " + manifest.manifest_name + "OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed\n")
 
     ## Log a comment that the operator wants to make

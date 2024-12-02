@@ -151,7 +151,7 @@ class LoadState(State):
             # move container elsewhere, use the unloading_containers_below function to estimate the future cost
             (prev, cd) = self.search_swap(self.crane_position, True, True, self.unloading_containers_below)
             cost += cd
-            if self.crane_position.location == Location.SHIP:
+            if self.crane_position.in_ship():
                 self.moves.append(Move(prev, copy.deepcopy(self.crane_position), cd, self.ship[self.crane_position.m][self.crane_position.n]))
             else:
                 self.moves.append(Move(prev, copy.deepcopy(self.crane_position), cd, self.buffer[self.crane_position.m][self.crane_position.n]))

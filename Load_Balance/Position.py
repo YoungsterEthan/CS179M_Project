@@ -60,6 +60,8 @@ class Position:
                         t = SHIP_HEIGHT
 
                     while c_p.m < t and loc[c_p.m][c_p.n].name != "UNUSED":
+                        if c_p.m == n_p.m:
+                            break
                         c += 1
                         c_p.move_up()
                 
