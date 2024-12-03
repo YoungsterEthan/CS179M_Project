@@ -26,11 +26,11 @@ class ManifestViewerScreen(QWidget):
 
         # Table to display the manifest
         self.table = QTableWidget()
-        self.table.setColumnCount(3)  # Columns: Coordinates, Container ID, Content
+        self.table.setColumnCount(3) 
         self.table.setHorizontalHeaderLabels(["Coordinates", "Container ID", "Content"])
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table.verticalHeader().setVisible(False)  # Hide row numbers
-        self.table.setStyleSheet("font-size: 14px;")  # Font styling for the table
+        self.table.setStyleSheet("font-size: 14px;")  
 
         # Populate the table with manifest data
         self.populate_table(manifest_data)

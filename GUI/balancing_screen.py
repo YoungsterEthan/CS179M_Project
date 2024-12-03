@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import (
     QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout
 )
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPainter, QBrush, QPen
+from PyQt5.QtCore import Qt, QPropertyAnimation, QRect
+from PyQt5.QtGui import QPainter, QBrush, QPen, QColor
 
 class GridWidget(QGridLayout):
     """Customizable grid for displaying containers."""
@@ -50,27 +50,33 @@ class GridWidget(QGridLayout):
                 )
 
 
-class TruckWidget(QWidget):
-    """Custom widget to represent the truck as a yellow circle."""
+class TruckWidget(QLabel):
     def __init__(self):
         super().__init__()
-        self.setFixedSize(100, 100)  # Set size for the truck area
+        self.setFixedSize(50, 50)  # Set the size of the truck
+        self.container_name = ""  # Stores the name of the container in the truck
 
     def paintEvent(self, event):
-        """Paint a yellow circle representing the truck."""
+        """Draw the truck as a yellow circle and display container name if present."""
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
+        painter.setBrush(QBrush(QColor("yellow")))
+        painter.drawEllipse(0, 0, self.width(), self.height())
 
-        # Draw a yellow circle
-        brush = QBrush(Qt.yellow, Qt.SolidPattern)
-        painter.setBrush(brush)
-        pen = QPen(Qt.black, 2)  
-        painter.setPen(pen)
+        # Draw the container name in the center of the circle
+        if self.container_name:
+            painter.setPen(Qt.black)
+            painter.drawText(self.rect(), Qt.AlignCenter, self.container_name)
 
-        # Circle position and size (place holder for truck)
-        radius = min(self.width(), self.height()) // 2
-        center_x, center_y = self.width() // 2, self.height() // 2
-        painter.drawEllipse(center_x - radius, center_y - radius, radius * 2, radius * 2)
+    def update_container(self, container_name):
+        """Update the truck to display the container name."""
+        self.container_name = container_name
+        self.update()  # Trigger a repaint to display the container
+
+    def clear_container(self):
+        """Clear the truck (remove the container name)."""
+        self.container_name = ""
+        self.update()  # Trigger a repaint to clear the container
 
 
 class BalancingLoadingScreen(QWidget):
@@ -87,43 +93,46 @@ class BalancingLoadingScreen(QWidget):
         title_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(title_label)
 
-        #dims
+        # dims
         self.left_grid_dims = grid_left_dims
         self.right_grid_dims = grid_right_dims
 
         self.moves = []
 
-        # Horizontal layout for truck and grids
+        # Horizontal layout for grids, crane, and truck
         main_layout = QHBoxLayout()
-        main_layout.setSpacing(20)  # Space between truck and grids
-
-        # Truck 
-        truck_widget = TruckWidget()
-        truck_layout = QVBoxLayout()
-        truck_layout.addWidget(truck_widget)
-        truck_layout.setAlignment(Qt.AlignCenter)
-        main_layout.addLayout(truck_layout)
-
-        # Grids layout
-        grids_layout = QHBoxLayout()
-        grids_layout.setSpacing(50)
+        main_layout.setSpacing(50)  # Space between sections
 
         # Left grid
         left_grid_widget = QWidget()
         left_grid_layout = GridWidget(*grid_left_dims)
         left_grid_widget.setLayout(left_grid_layout)
+        main_layout.addWidget(left_grid_widget, stretch=3)
+
+        # Crane and truck layout
+        crane_truck_layout = QHBoxLayout()
+        crane_truck_layout.setAlignment(Qt.AlignCenter)  # Align elements in the center
+
+        # Truck widget
+        self.truck_widget = TruckWidget()
+        self.truck_widget.setFixedSize(80, 80)  # Adjusted size
+        self.truck_widget.setStyleSheet("border: 2px solid black; background-color: yellow; border-radius: 40px;")
+        crane_truck_layout.addWidget(self.truck_widget, alignment=Qt.AlignCenter)
+
+        # Crane
+        self.crane = QLabel()
+        self.crane.setFixedSize(50, 500)  # Made taller
+        self.crane.setStyleSheet("background-color: red; border-radius: 10px;")
+        crane_truck_layout.addWidget(self.crane, alignment=Qt.AlignCenter)
+
+        main_layout.addLayout(crane_truck_layout, stretch=1)
 
         # Right grid
         right_grid_widget = QWidget()
         right_grid_layout = GridWidget(*grid_right_dims)
         right_grid_widget.setLayout(right_grid_layout)
+        main_layout.addWidget(right_grid_widget, stretch=3)
 
-        # Add grids to the layout
-        grids_layout.addWidget(left_grid_widget, stretch=3)
-        grids_layout.addWidget(right_grid_widget, stretch=1)
-
-        # Add truck and grids to the main layout
-        main_layout.addLayout(grids_layout)
         layout.addLayout(main_layout)
 
         # Bottom control buttons
@@ -177,12 +186,51 @@ class BalancingLoadingScreen(QWidget):
         self.current_move_index = 0
 
     def next_move(self):
-        """Display the next move."""
+        """Execute the next move in the list."""
         if self.current_move_index < len(self.moves):
             move = self.moves[self.current_move_index]
-            print(f"Executing move: {move}")  # Placeholder for animation logic
+            print(f"Executing move: {move}")  # Log the move for debugging
+
+            # Determine source and destination positions
+            source = move.m_from
+            destination = move.m_to
+
+            # Adjust coordinates for grid logic
+            source_row = source.m + 1
+            source_col = source.n + 1
+            dest_row = destination.m + 1
+            dest_col = destination.n + 1
+
+            # Check if the move is only for the crane
+            if move.container.name == "UNUSED":
+                # Only animate the crane moving
+                print(f"Animating crane from {source} to {destination}")
+                # Placeholder for crane animation logic
+            else:
+                # Handle movement based on source and destination locations
+                if source.location == "SHIP" and destination.location == "SHIP":
+                    # Move within the ship
+                    self.update_right_grid(source_row, source_col, "", "white")  # Clear source cell
+                    self.update_right_grid(dest_row, dest_col, move.container.name, "white")  # Update destination cell
+
+                elif source.location == "SHIP" and destination.location == "TRUCK":
+                    # Move from the ship to the truck
+                    self.update_right_grid(source_row, source_col, "", "white")  # Clear the ship cell
+                    self.truck_widget.update_container(move.container.name)  # Add container to the truck
+
+                elif source.location == "TRUCK" and destination.location == "SHIP":
+                    # Move from the truck to the ship
+                    self.truck_widget.clear_container()  # Clear the truck
+                    self.update_right_grid(dest_row, dest_col, move.container.name, "white")  # Add to the ship
+
+                elif source.location == "CRANE_REST" or destination.location == "CRANE_REST":
+                    # Handle crane rest movements if necessary (no visual update for now)
+                    pass
+
+                else:
+                    print(f"Unhandled move: {move}")
+
+            # Increment the move index
             self.current_move_index += 1
         else:
             print("No more moves.")
-
-
