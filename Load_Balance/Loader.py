@@ -1,9 +1,9 @@
 import heapq
-from Load_Balance.LoadState import LoadState
+from LoadState import LoadState
 from consts import MAX_STATES, STATE_CULL, SHIP_HEIGHT, SHIP_WIDTH, SHIP_VIRTUAL_CELL, EST_COST
 import copy
 from collections import defaultdict
-from Load_Balance.Position import Position, Location
+from Position import Position, Location
 from Manifest import Manifest
 from ContainerData import ContainerData
 from typing import List

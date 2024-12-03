@@ -1,4 +1,8 @@
 import sys
+sys.path.insert(0, '/Users/youngsterethan/Desktop/CS179M_Project/CS179M_Project-1/Load_Balance')
+sys.path.insert(0, '/Users/youngsterethan/Desktop/CS179M_Project/CS179M_Project-1/')
+
+
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QStackedWidget
 )
@@ -6,6 +10,11 @@ from balancing_screen import *
 from login_screen import * 
 from manifest_view_screen import *
 from task_selection_screen import *
+
+from Loader import Loader
+from Manifest import Manifest
+import os
+from ContainerData import ContainerData
 
 
 class MainWindow(QMainWindow):
@@ -19,6 +28,8 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         self.manifest_data = []
+        self.current_move_index = 0  # Track the current move
+        self.moves = []  # Store moves
 
         # Initialize screens
         self.login_screen = LoginScreen(self.show_task_selection_screen)
@@ -123,6 +134,15 @@ class MainWindow(QMainWindow):
                 print(f"Error processing line: {line}, Error: {e}")
                 continue
 
+
+    def set_moves(self, moves):
+        """Set the moves to be displayed on the balancing screen."""
+        self.moves = moves
+        self.balancing_screen.set_moves(moves)
+
+ 
+            
+        
 
 
 

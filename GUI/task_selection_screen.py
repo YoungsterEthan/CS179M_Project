@@ -1,8 +1,14 @@
 import sys
+sys.path.insert(0, '/Users/youngsterethan/Desktop/CS179M_Project/CS179M_Project-1/Load_Balance')
+sys.path.insert(0, '/Users/youngsterethan/Desktop/CS179M_Project/CS179M_Project-1/')
 from PyQt5.QtWidgets import (
     QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QMessageBox, QFileDialog
 )
 from PyQt5.QtCore import Qt
+from ContainerData import ContainerData
+from Manifest import Manifest
+from Loader import Loader
+import os
 
 class TaskSelectionScreen(QWidget):
     def __init__(self, main_window, switch_to_balancing, switch_to_loading):
@@ -84,6 +90,24 @@ class TaskSelectionScreen(QWidget):
             with open(file_path, "r") as file:
                 data = file.readlines()
 
+            # Remove the .txt extension from the file path
+            file = os.path.splitext(file_path)[0]
+
+            # Ensure the manifest path is properly constructed
+            manifest = Manifest('', file)
+            manifest.read_manifest()
+            loader = Loader(manifest)
+
+            # Example data for loading/unloading (to be replaced with your logic)
+            moves = loader.load_unload(
+                [ContainerData("Bat", "00532"), ContainerData("Rat", "06317")],  # Loading
+                [ContainerData("Cow", "00000")]  # Unloading
+            )
+            
+
+            # Pass move data to the main window
+            self.main_window.set_moves(moves)
+
             self.main_window.set_manifest_data(data)
 
             # Transition to the appropriate screen
@@ -126,3 +150,5 @@ class TaskSelectionScreen(QWidget):
             """
         )
         msg_box.exec_()
+
+

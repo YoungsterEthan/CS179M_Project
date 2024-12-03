@@ -1,4 +1,4 @@
-from Load_Balance.Position import Position, Location
+from Position import Position, Location
 from ContainerData import ContainerData
 from consts import SHIP_HEIGHT, SHIP_WIDTH, SHIP_BUFF, BUFF_HEIGHT, BUFF_WIDTH, SHIP_VIRTUAL_CELL, BUFF_VIRTUAL_CELL
 import copy

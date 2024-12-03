@@ -91,6 +91,8 @@ class BalancingLoadingScreen(QWidget):
         self.left_grid_dims = grid_left_dims
         self.right_grid_dims = grid_right_dims
 
+        self.moves = []
+
         # Horizontal layout for truck and grids
         main_layout = QHBoxLayout()
         main_layout.setSpacing(20)  # Space between truck and grids
@@ -131,6 +133,7 @@ class BalancingLoadingScreen(QWidget):
         # Next Move Button
         next_button = QPushButton("Next Move")
         next_button.setStyleSheet("font-size: 14px; padding: 8px;")
+        next_button.clicked.connect(self.next_move)  # Connect to the next_move method
         controls_layout.addWidget(next_button)
 
         # Estimated Time Remaining
@@ -167,5 +170,19 @@ class BalancingLoadingScreen(QWidget):
         r = n_row - row
         c = col - 1
         self.right_grid_layout.update_cell(r, c, text, color)
+
+    def set_moves(self, moves):
+        """Set the moves for the screen."""
+        self.moves = moves
+        self.current_move_index = 0
+
+    def next_move(self):
+        """Display the next move."""
+        if self.current_move_index < len(self.moves):
+            move = self.moves[self.current_move_index]
+            print(f"Executing move: {move}")  # Placeholder for animation logic
+            self.current_move_index += 1
+        else:
+            print("No more moves.")
 
 
