@@ -21,10 +21,14 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Arkloaders App")
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(100, 100, 800, 1000)
+
+        # Set the background color of the main window
+        self.setStyleSheet("background-color: #87CEEB;")  # Ocean blue background
 
         # Central widget to manage screens
         self.central_widget = QStackedWidget()
+        self.central_widget.setContentsMargins(0, 0, 0, 0)  # Remove margins
         self.setCentralWidget(self.central_widget)
 
         self.manifest_data = []
@@ -32,6 +36,7 @@ class MainWindow(QMainWindow):
         self.moves = []  # Store moves
 
         # Initialize screens
+        
         self.login_screen = LoginScreen(self.show_task_selection_screen)
         self.task_selection_screen = TaskSelectionScreen(
             self,
@@ -65,6 +70,7 @@ class MainWindow(QMainWindow):
 
         # Show the login screen initially
         self.central_widget.setCurrentWidget(self.login_screen)
+
 
     def show_task_selection_screen(self):
         """Switch to the Task Selection screen."""
@@ -139,6 +145,8 @@ class MainWindow(QMainWindow):
         """Set the moves to be displayed on the balancing screen."""
         self.moves = moves
         self.balancing_screen.set_moves(moves)
+        self.loading_screen.set_moves(moves)
+
 
  
             
