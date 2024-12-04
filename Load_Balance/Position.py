@@ -1,7 +1,7 @@
 from consts import SHIP_HEIGHT, SHIP_WIDTH, SHIP_BUFF, BUFF_HEIGHT, BUFF_WIDTH, SHIP_VIRTUAL_CELL, BUFF_VIRTUAL_CELL
-import copy
-from typing import List
 from ContainerData import ContainerData
+from typing import List
+import copy
 
 class Location:
     SHIP = "SHIP"
@@ -23,6 +23,8 @@ class Position:
         self.location = location
 
     def __eq__(self, value):
+        if not isinstance(value, Position):
+            return False
         return self.m == value.m and self.n == value.n and self.location == value.location
     
     def __hash__(self) -> int:
@@ -30,7 +32,7 @@ class Position:
 
     # moves from the current position to the given position
     # returns the previous position and the cost of this move
-    def move_to(self, pos: 'Position', loc: List[ContainerData] = None):
+    def move_to(self, pos: 'Position', loc: List[ContainerData] = None, apply_move=True):
         old_p = copy.deepcopy(self)
         
         # move within the same location
@@ -44,6 +46,7 @@ class Position:
             else:
                 n_p = copy.deepcopy(pos)
                 c_p = copy.deepcopy(self)
+
                 # if pos is to the left swap them
                 if c_p.n > n_p.n:
                     c_p, n_p = n_p, c_p
@@ -57,10 +60,10 @@ class Position:
                     if c_p.location == Location.BUFFER:
                         t = BUFF_HEIGHT
                     else:
-                        t = SHIP_HEIGHT
+                        t = SHIP_HEIGHT+SHIP_BUFF
 
-                    while c_p.m < t and loc[c_p.m][c_p.n].name != "UNUSED":
-                        if c_p.m == n_p.m:
+                    while c_p.m < t and loc[c_p.m][c_p.n] and loc[c_p.m][c_p.n].name != "UNUSED":
+                        if c_p == n_p:
                             break
                         c += 1
                         c_p.move_up()
@@ -108,6 +111,9 @@ class Position:
         else:
             assert False, "Invalid move"
 
+        if not apply_move:
+            return (old_p, c)
+        
         # apply this move
         self.m = pos.m
         self.n = pos.n
@@ -131,7 +137,7 @@ class Position:
     def in_ship(self):
         return self.location == Location.SHIP
     
-    def in_ship_buff(self):
+    def in_ship_buf(self):
         return self.location == Location.SHIP and self.m >= SHIP_HEIGHT
 
     def in_truck(self):
@@ -186,16 +192,12 @@ class Position:
     
     def __str__(self):
         if self.location == Location.SHIP:
-            return "SHIP[" + str(self.m) + ", " + str(self.n) + "]"
+            return "SHIP[" + str(self.m+1) + ", " + str(self.n+1) + "]" # print 1 indexed
         elif self.location == Location.BUFFER:
-            return "BUFFER[" + str(self.m) + ", " + str(self.n) + "]"
+            return "BUFFER[" + str(self.m+1) + ", " + str(self.n+1) + "]" # print 1 indexed
         elif self.location == Location.TRUCK:
             return "TRUCK"
         elif self.location == Location.CRANE_REST:
             return "CRANE_REST"
-        elif self.location == Location.SHIP_VIRTUAL_CELL:
-            return "SHIP_VIRTUAL_CELL"
-        elif self.location == Location.BUFF_VIRTUAL_CELL:
-            return "BUFF_VIRTUAL_CELL"
         else:
             return "INVALID"

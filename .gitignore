@@ -1,1 +1,6 @@
 /project_env
+project_env
+test.txt
+GUI/__pycache__
+__pycache__
+*OUTBOUND.txt
