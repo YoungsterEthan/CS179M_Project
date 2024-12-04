@@ -1,51 +1,80 @@
-from consts import SHIP_WIDTH
 import heapq
 from Load_Balance.BalanceState import BalanceState
+from consts import MAX_STATES, STATE_CULL, SHIP_HEIGHT
+from Manifest import Manifest
+
 ## Balancer will balance the containers in the manifest
 ## Edits the manifest and saves the edited file using Manifest
 ## The edited manifest will be the result of completing all listed moves
 class Balancer:
-    def __init__(self):
-        self.manifest = None
+    def __init__(self, manifest: Manifest):
+        self.manifest = manifest
 
-    ## Balance the containers in the manifest
-    ## Returns the Moves the operator needs to perform
+    ## Given a list of containers to load and a list of containers to unload
+    ## return the Moves the operator needs to perform
+    ## will update the manifest
     def balance(self):
-        states = BalanceState(self.manifest)
+        states = [BalanceState(self.manifest)]
+        states[0].calculate_h()
+        
+        if states[0].h == float('inf'):
+            print("(Balancer)This ship cannot be balanced")
+            return []
+        
+        culled_states = []
+        visited = set()
+        visited.add(states[0])
 
-        p_size = 1
+        # frontier counter
         f = 0
-        pruned = 0
 
-        print("frontier " + str(f) + " states: " + str(len(states)))
+        print("(Balancer)frontier " + str(f) + " states: " + str(len(states)))
 
+        # searching for the goal state by popping the best seen state off the heap and expanding it
         while states:
             state = heapq.heappop(states)
 
-            p_size-=1
-            if not p_size:
-                f+=1
-                print("frontier " + str(f) + " states: " + str(len(states)) + " current best cost: " + str(state.g) + " pruned: " + str(pruned))
-                p_size = len(states)
-                pruned = 0
-
+            # if this is a goal state we found a good solution
             if(state.is_goal()):
                 self.update_manifest(state)
                 return state.moves
-            
-            (n_states, p) = state.next_states()
-            pruned += p
 
-            for n_state in n_states:
-                heapq.heappush(states, n_state)
-
-            n_states.clear()
-            if len(states) > MAX_STATES:
-                print("culling " + str(len(states)-STATE_CULL) + " states")
+            if not states and culled_states:
+                print("(Balancer)re-expanding " + str(STATE_CULL) + " states")
                 for _ in range(STATE_CULL):
-                    heapq.heappush(n_states, heapq.heappop(states))
+                    heapq.heappush(states, heapq.heappop(culled_states))
+            
+            n_states = state.next_states()
+            if f % 100 == 0:
+                print("(Balancer)frontier " + str(f) + " states: " + str(len(states)) + " current best g: " + str(state.g) + " h: " + str(state.h))
+            f += 1
+            
+            for n_state in n_states:
+                if n_state not in visited:
+                    visited.add(n_state)
+                    heapq.heappush(states, n_state)
 
-                states = n_states
+            # cull states to re exapand later if needed
+            keep_states = []
+            if len(states) > MAX_STATES:
+                print("(Balancer)culling " + str(len(states)-STATE_CULL) + " states")
+                # save the STATE_CULL best states
+                for _ in range(STATE_CULL):
+                    heapq.heappush(keep_states, heapq.heappop(states))
 
-        print("(Balancer)WARNING: No solution found")
-        return []
+                for s in states:
+                    heapq.heappush(culled_states, s)
+                
+                states = keep_states
+
+        assert False, "No solution found, fire joey8angelo"
+    
+    def update_manifest(self, state):
+        for i,row in enumerate(state.ship):
+            if i >= SHIP_HEIGHT:
+                break
+            for j,container in enumerate(row):
+                if container:
+                    self.manifest.set_at(i+1, j+1, container)
+
+        self.manifest.save()

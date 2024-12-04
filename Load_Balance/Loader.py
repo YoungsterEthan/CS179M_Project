@@ -1,13 +1,12 @@
-import heapq
+from consts import MAX_STATES, STATE_CULL, SHIP_HEIGHT, SHIP_WIDTH
 from Load_Balance.LoadState import LoadState
-from consts import MAX_STATES, STATE_CULL, SHIP_HEIGHT, SHIP_WIDTH, SHIP_VIRTUAL_CELL, EST_COST
-import copy
-from collections import defaultdict
 from Load_Balance.Position import Position, Location
 from Manifest import Manifest
 from ContainerData import ContainerData
 from typing import List
-from Move import Move
+from collections import defaultdict
+import copy
+import heapq
 
 ## The Loader class is responsible for loading and unloading containers
 ## Edits the manifest and saves the edited file using Manifest
@@ -21,55 +20,56 @@ class Loader:
     ## will update the manifest
     def load_unload(self, containers_to_load: List[ContainerData], containers_to_unload: List[ContainerData]):
         states = self.make_starting_states(containers_to_load, containers_to_unload) # heap of states to search
+        culled_states = []
 
-        # informational data
-        p_size = len(states)
+        # frontier counter
         f = 0
-        pruned = 0
 
-        print("frontier " + str(f) + " states: " + str(len(states)))
+        print("(Loader)frontier " + str(f) + " states: " + str(len(states)))
 
         # searching for the goal state by popping the best seen state off the heap and expanding it
         while states:
             state = heapq.heappop(states)
-            
-            p_size-=1
-            if not p_size:
-                f+=1
-                print("frontier " + str(f) + " states: " + str(len(states)) + " current best cost: " + str(state.g) + " pruned: " + str(pruned))
-                p_size = len(states)
-                pruned = 0
-            
+
             # if this is a goal state we found a good solution
-            # with the current hueristic this is may not be optimal
             if(state.is_goal()):
                 self.update_manifest(state)
                 return state.moves
+
+            if not states and culled_states:
+                print("(Loader)re-expanding " + str(STATE_CULL) + " states")
+                for _ in range(STATE_CULL):
+                    heapq.heappush(states, heapq.heappop(culled_states))
             
-            (n_states, p) = state.next_states()
-            pruned += p
+            n_states = state.next_states()
+            if f % 100 == 0:
+                print("(Loader)frontier " + str(f) + " states: " + str(len(states)) + " current best g: " + str(state.g) + " h: " + str(state.h))
+            f += 1
             
             for n_state in n_states:
                 heapq.heappush(states, n_state)
 
-            # fail safe, if a pathological input blows up the heap cull some states
-            n_states.clear()
+            # cull states to re exapand later if needed
+            keep_states = []
             if len(states) > MAX_STATES:
-                print("culling " + str(len(states)-STATE_CULL) + " states")
+                print("(Loader)culling " + str(len(states)-STATE_CULL) + " states")
+                # save the STATE_CULL best states
                 for _ in range(STATE_CULL):
-                    heapq.heappush(n_states, heapq.heappop(states))
+                    heapq.heappush(keep_states, heapq.heappop(states))
 
-                states = n_states
+                for s in states:
+                    heapq.heappush(culled_states, s)
+                
+                states = keep_states
 
-        print("(Loader)WARNING: No solution found")
-        return []
+        assert False, "No solution found, fire joey8angelo"
 
     # a map of containers names to the set of positions they are in
     def get_unload_map(self, containers, state):
         unload_map = defaultdict(set)
         for i in range(SHIP_HEIGHT):
             for j in range(SHIP_WIDTH):
-                if state.ship[i][j] and state.contains_name(containers, state.ship[i][j].name) != -1:
+                if state.ship[i][j] and state.ship[i][j] in containers:
                     unload_map[state.ship[i][j].name].add(Position(Location.SHIP, [i, j]))
         return unload_map
 
@@ -88,9 +88,10 @@ class Loader:
             nonlocal states, containers_to_load, unload_map
             # if we have used up all containers in the list we use the current combination we made
             if not containers_to_unload:
-                state = copy.deepcopy(init_state) # clone the initial state
+                state = copy.deepcopy(init_state)        # clone the initial state
                 state.containers_to_unload = curr.copy() # fill in the containers to unload
-                heapq.heappush(states, state) # add the state to the heap
+                state.calculate_h()                      # calculate the heuristic
+                heapq.heappush(states, state)            # add the state to the heap
                 return
             
             container = containers_to_unload.pop()
@@ -116,8 +117,3 @@ class Loader:
                     self.manifest.set_at(i+1, j+1, container)
 
         self.manifest.save()
-
-        # final crane move to rest pos
-        (p, c) = state.crane_position.move_to(Position(Location.CRANE_REST))
-        state.g += c
-        state.moves.append(Move(p, state.crane_position, c))
