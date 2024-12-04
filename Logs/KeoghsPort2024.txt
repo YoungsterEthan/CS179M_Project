@@ -12,3 +12,147 @@
 2024-12-01 21:20 Finishes a cycle. Manifest test_manifestOUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
 2024-12-01 21:20 Manifest ShipCase1.txt is opened, there are 2 containers on the ship
 2024-12-01 21:20 Finishes a cycle. Manifest ShipCase1OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 14:16 Manifest ShipCase2.txt is opened, there are 4 containers on the ship
+2024-12-02 14:16 Finishes a cycle. Manifest ShipCase2OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 14:16 Manifest ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 14:16 Finishes a cycle. Manifest ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 14:16 Manifest ShipCase4.txt is opened, there are 7 containers on the ship
+2024-12-02 14:16 Finishes a cycle. Manifest ShipCase4OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 14:16 Manifest ShipCase5.txt is opened, there are 5 containers on the ship
+2024-12-02 14:16 Finishes a cycle. Manifest ShipCase5OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 14:16 Manifest full_manifest.txt is opened, there are 80 containers on the ship
+2024-12-02 14:16 Finishes a cycle. Manifest full_manifestOUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 14:16 Manifest test_manifest.txt is opened, there are 9 containers on the ship
+2024-12-02 14:17 Finishes a cycle. Manifest test_manifestOUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 14:17 Manifest ShipCase1.txt is opened, there are 2 containers on the ship
+2024-12-02 14:17 Finishes a cycle. Manifest ShipCase1OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 14:31 Manifest ShipCase2.txt is opened, there are 4 containers on the ship
+2024-12-02 14:37 Manifest ShipCase2.txt is opened, there are 4 containers on the ship
+2024-12-02 14:37 Finishes a cycle. Manifest ShipCase2OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 14:37 Manifest ShipCase2.txt is opened, there are 4 containers on the ship
+2024-12-02 14:37 Finishes a cycle. Manifest ShipCase2OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 14:55 Manifest ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 14:55 Finishes a cycle. Manifest ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 17:45 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 17:45 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 17:48 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 17:48 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 18:04 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 18:04 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 18:23 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 18:23 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 18:25 Manifest ShipCase2.txt is opened, there are 4 containers on the ship
+2024-12-02 18:25 Finishes a cycle. Manifest ShipCase2OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 18:25 Manifest ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 18:25 Finishes a cycle. Manifest ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 18:25 Manifest ShipCase4.txt is opened, there are 7 containers on the ship
+2024-12-02 18:25 Finishes a cycle. Manifest ShipCase4OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 18:25 Manifest ShipCase5.txt is opened, there are 5 containers on the ship
+2024-12-02 18:25 Finishes a cycle. Manifest ShipCase5OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 18:25 Manifest full_manifest.txt is opened, there are 80 containers on the ship
+2024-12-02 18:25 Finishes a cycle. Manifest full_manifestOUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 18:25 Manifest test_manifest.txt is opened, there are 9 containers on the ship
+2024-12-02 18:26 Finishes a cycle. Manifest test_manifestOUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 18:26 Manifest ShipCase1.txt is opened, there are 2 containers on the ship
+2024-12-02 18:26 Finishes a cycle. Manifest ShipCase1OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 18:42 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 18:42 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 18:49 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 18:49 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 19:03 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 19:03 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 19:05 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 19:05 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 19:09 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 19:09 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 19:13 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 19:13 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 19:13 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 19:13 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 19:15 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 19:15 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 19:16 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 19:16 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 19:20 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 19:20 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 19:41 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 19:41 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 19:46 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 19:46 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 19:50 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 19:50 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-02 19:53 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-02 19:53 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 10:44 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 10:44 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 10:49 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 10:49 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:24 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 11:24 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:26 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 11:26 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:27 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 11:27 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:28 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 11:28 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:30 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 11:30 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:31 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 11:31 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:33 Manifest ShipCase2.txt is opened, there are 4 containers on the ship
+2024-12-03 11:33 Finishes a cycle. Manifest ShipCase2OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:33 Manifest ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 11:33 Finishes a cycle. Manifest ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:33 Manifest ShipCase4.txt is opened, there are 7 containers on the ship
+2024-12-03 11:33 Finishes a cycle. Manifest ShipCase4OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:33 Manifest ShipCase5.txt is opened, there are 5 containers on the ship
+2024-12-03 11:33 Finishes a cycle. Manifest ShipCase5OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:33 Manifest full_manifest.txt is opened, there are 80 containers on the ship
+2024-12-03 11:33 Finishes a cycle. Manifest full_manifestOUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:33 Manifest test_manifest.txt is opened, there are 9 containers on the ship
+2024-12-03 11:33 Finishes a cycle. Manifest test_manifestOUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:33 Manifest ShipCase1.txt is opened, there are 2 containers on the ship
+2024-12-03 11:33 Finishes a cycle. Manifest ShipCase1OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:38 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 11:38 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:55 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 11:55 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:59 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 11:59 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 11:59 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 11:59 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 12:49 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 12:51 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 12:53 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 12:58 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 13:00 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 13:02 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 13:03 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 13:04 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 13:07 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 13:10 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 13:11 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 13:20 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 13:20 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 13:36 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 13:37 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 13:40 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 13:40 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 13:44 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 13:44 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 13:45 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 14:01 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 14:01 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 14:20 Manifest /Users/youngsterethan/Downloads/ShipCase5.txt is opened, there are 5 containers on the ship
+2024-12-03 14:20 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase5OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 14:21 Manifest /Users/youngsterethan/Downloads/ShipCase5.txt is opened, there are 5 containers on the ship
+2024-12-03 14:21 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase5OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 15:12 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 15:12 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 15:14 Manifest /Users/youngsterethan/Downloads/ShipCase5.txt is opened, there are 5 containers on the ship
+2024-12-03 15:14 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase5OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 15:38 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 15:39 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 15:40 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-03 16:14 Manifest /Users/youngsterethan/Downloads/ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-03 16:14 Finishes a cycle. Manifest /Users/youngsterethan/Downloads/ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
