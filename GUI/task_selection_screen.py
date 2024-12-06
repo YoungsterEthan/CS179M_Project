@@ -8,6 +8,7 @@ from PyQt5.QtCore import Qt
 from ContainerData import ContainerData
 from Manifest import Manifest
 from Loader import Loader
+from Balancer import Balancer
 import os
 from load_unload_selction_screen import *
 
@@ -98,16 +99,25 @@ class TaskSelectionScreen(QWidget):
             manifest.read_manifest()
 
             def handle_selection(offload, load):
-               print("in selection")
-               loader = Loader(manifest)
-               moves = loader.load_unload(load, offload)
-               self.main_window.set_moves(moves)
+                # print("in selection")
+                loader = Loader(manifest)
+                moves = loader.load_unload(load, offload)
+                self.main_window.set_moves(moves)
+
+
+
 
 
             self.main_window.set_manifest_data(data)
 
-            selection_screen = LoadUnloadSelectionScreen(manifest, handle_selection)
-            selection_screen.exec_()
+            if task_name == "Loading/Unloading Task":
+                selection_screen = LoadUnloadSelectionScreen(manifest, handle_selection)
+                selection_screen.exec_()
+            else:
+                balancer = Balancer(manifest)
+                moves = balancer.balance()
+                self.main_window.set_moves(moves)
+            
 
             # Transition to the appropriate screen
             if task_name == "Balancing Task":

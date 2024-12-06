@@ -5,7 +5,6 @@ from PyQt5.QtCore import Qt
 from ContainerData import ContainerData
 class LoadUnloadSelectionScreen(QDialog):
     def __init__(self, manifest, confirm_callback):
-        print("AM I INITIALIZING")
         super().__init__()
         self.setWindowTitle("Select Containers to Load/Unload")
         self.setGeometry(100, 100, 600, 400)

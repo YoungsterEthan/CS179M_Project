@@ -117,6 +117,7 @@ class MainWindow(QMainWindow):
                 # Parse the manifest line
                 coordinates, container_id, content = line.split(", ")
                 row, col = map(int, coordinates.strip("[]").split(","))
+                metadata = {"Name": content, "Weight": "50kg", "ID": container_id}
                 # print(f"Original coordinates: row={row}, col={col}")
 
                 # Subtract 1 for zero-based indexing
@@ -132,8 +133,8 @@ class MainWindow(QMainWindow):
                     elif content.strip() == "UNUSED":
                         screen.update_right_grid(row, col, "", "white")
                     else:
-                        screen.update_right_grid(row, col, content, "white")
-
+                        screen.update_right_grid(row, col, content, "white", metadata)
+                        
     
 
             except ValueError as e:

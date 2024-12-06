@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import (
-    QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout
+    QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout, QTextEdit, QToolTip
 )
-from PyQt5.QtCore import Qt, QPropertyAnimation, QRect, QPointF, QEasingCurve
-from PyQt5.QtGui import QPainter, QBrush, QPen, QColor
+from PyQt5.QtCore import Qt, QPropertyAnimation, QRect, QPointF, QEasingCurve, QTimer, QEvent
+from PyQt5.QtGui import QPainter, QBrush, QPen, QColor, QFont
 
 class GridWidget(QGridLayout):
     """Customizable grid for displaying containers."""
@@ -13,7 +13,10 @@ class GridWidget(QGridLayout):
 
         # Remove spacing between cells
         self.setSpacing(0)
-        self.setContentsMargins(0, 0, 0, 0)  
+        self.setContentsMargins(0, 0, 0, 0)
+
+        # Store metadata for containers
+        self.container_metadata = {}  # Key: (row, col), Value: dict with container info
 
         self.initialize_grid()
 
@@ -30,26 +33,46 @@ class GridWidget(QGridLayout):
                     "border: 1px solid black; background-color: white; font-size: 12px; text-align: center;"
                 )
                 cell.setAlignment(Qt.AlignCenter)
+                cell.setAttribute(Qt.WA_Hover)  # Enable hover events
+                cell.installEventFilter(self)  # Install the event filter
                 self.addWidget(cell, row, col)
 
-    def update_cell(self, row, col, text, color="white"):
-        """Update a specific cell with text and background color."""
-        text_color = ""
-        if color == "white":
-            text_color = "black"
-        else:
-            text_color = "white"
+    def update_cell(self, row, col, text, color="white", metadata=None):
+        """Update a specific cell with text, background color, and optional metadata."""
+        text_color = "black" if color == "white" else "white"
+        cell = self.itemAtPosition(row, col).widget()
+        if cell:
+            cell.setText(text)
+            cell.setStyleSheet(
+                f"border: 1px solid black; background-color: {color}; color: {text_color}; font-size: 12px; text-align: center;"
+            )
 
-        cell = self.itemAtPosition(row, col)
-        if cell is not None:
-            widget = cell.widget()
-            if widget:
-                widget.setText(text)
-                widget.setStyleSheet(
-                    f"border: 1px solid black; background-color: {color}; color: {text_color}; font-size: 12px; text-align: center;"
-                )
+            self.container_metadata[(row, col)] = metadata
 
+    def eventFilter(self, obj, event):
+        """Handle hover events to display tooltips."""
+        if event.type() == QEvent.HoverEnter or event.type() == QEvent.HoverMove:
+            # Get the position of the hover event relative to the widget
+            hover_pos = obj.mapToGlobal(event.pos())
 
+            # Check if the object has metadata
+            for (row, col), metadata in self.container_metadata.items():
+                cell = self.itemAtPosition(row, col)
+                if cell and cell.widget() == obj:
+                    # If metadata exists, display it
+                    tooltip_text = "\n".join(f"{key}: {value}" for key, value in metadata.items())
+                    QToolTip.showText(hover_pos, tooltip_text, obj)
+                    return True
+
+            # If no metadata, show "Empty Cell"
+            QToolTip.showText(hover_pos, "Empty Cell", obj)
+            return True
+        elif event.type() == QEvent.HoverLeave:
+            QToolTip.hideText()
+            return True
+
+        return super().eventFilter(obj, event)
+    
 class TruckWidget(QLabel):
     def __init__(self):
         super().__init__()
@@ -101,7 +124,7 @@ class BalancingLoadingScreen(QWidget):
 
         # Horizontal layout for grids, crane, and truck
         main_layout = QHBoxLayout()
-        main_layout.setSpacing(50)  # Space between sections
+        main_layout.setSpacing(30)  # Space between sections
 
         # Left grid
         left_grid_widget = QWidget()
@@ -141,8 +164,21 @@ class BalancingLoadingScreen(QWidget):
 
         # Next Move Button
         next_button = QPushButton("Next Move")
-        next_button.setStyleSheet("font-size: 14px; padding: 8px;")
-        next_button.clicked.connect(self.next_move)  # Connect to the next_move method
+        next_button.setFont(QFont("Arial", 12, QFont.Bold))
+        next_button.setFixedSize(350, 40)
+        next_button.setStyleSheet(
+            """
+            QPushButton {
+                background-color: #4682B4;  /* Steel Blue */
+                color: white;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #1E90FF;  /* Dodger Blue */
+            }
+            """
+        )
+        next_button.clicked.connect(self.next_move)
         controls_layout.addWidget(next_button)
 
         # Estimated Time Remaining
@@ -152,15 +188,39 @@ class BalancingLoadingScreen(QWidget):
 
         # Manifest Button
         manifest_button = QPushButton("View Manifest")
-        manifest_button.setStyleSheet("font-size: 14px; padding: 8px;")
+        manifest_button.setFont(QFont("Arial", 12, QFont.Bold))
+        manifest_button.setFixedSize(250, 40)
+        manifest_button.setStyleSheet(
+            """
+            QPushButton {
+                background-color: #4682B4;  /* Steel Blue */
+                color: white;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #1E90FF;  /* Dodger Blue */
+            }
+            """
+        )
         manifest_button.clicked.connect(show_manifest_viewer)
         controls_layout.addWidget(manifest_button)
 
-
-
         # Back Button
         back_button = QPushButton("Back to Home")
-        back_button.setStyleSheet("font-size: 14px; padding: 8px;")
+        back_button.setFont(QFont("Arial", 12, QFont.Bold))
+        back_button.setFixedSize(250, 40)
+        back_button.setStyleSheet(
+            """
+            QPushButton {
+                background-color: #4682B4;  /* Steel Blue */
+                color: white;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #1E90FF;  /* Dodger Blue */
+            }
+            """
+        )
         back_button.clicked.connect(switch_to_home)
         controls_layout.addWidget(back_button)
 
@@ -182,38 +242,75 @@ class BalancingLoadingScreen(QWidget):
         self.circle_animation.setDuration(500)  # Set animation duration (e.g., 500ms)
         self.circle_animation.setEasingCurve(QEasingCurve.InOutQuad)  # Smooth transition
 
-    def setup_circle(self, row, col):
-        """Place the circle at a specific grid cell."""
-        x, y = self.get_cell_position(row, col)
-        self.circle_label.move(x, y)
-        self.circle_label.show()
+        # Timer for alternating animation
+        self.animation_timer = QTimer()
+        self.animation_timer.timeout.connect(self.toggle_animation_position)
+        self.is_animating_to_source = True  # Track the direction of the animation
 
-    def animate_circle(self, row, col, destination):
-        """Animate the circle to move to a specific grid cell."""
-        # Calculate the position of the target cell
-        x = 0
-        y = 0
+        self.current_source = None  # Track the current source position
+        self.current_destination = None  # Track the current destination position
+
+        # Console for logging moves
+        self.console = QTextEdit()
+        self.console.setReadOnly(True)  # Make it read-only
+        self.console.setFixedSize(500, 100)  # Adjust width and height for a smaller console
+        self.console.setStyleSheet(
+            """
+            QTextEdit {
+                background-color: #4682B4;  /* Steel Blue */
+                color: white;  /* White text */
+                font-family: Arial, sans-serif;
+                font-size: 12px;
+                border-radius: 8px;  /* Rounded corners */
+                padding: 10px;
+                border: 2px solid #1E90FF;  /* Dodger Blue border for focus */
+            }
+            """
+        )
+
+        # Add the console in a bottom-centered position
+        console_layout = QHBoxLayout()
+        console_layout.addStretch()  # Add flexible space to center the console
+        console_layout.addWidget(self.console)
+        console_layout.addStretch()  # Add flexible space to center the console
+
+        layout.addLayout(console_layout)  # Add the console layout to the main layout
 
 
-        if destination == "CRANE_REST":
-            x,y = 1152, 280
-        elif destination == "TRUCK":
-            x,y = 1045, 430
-        else:
-            x, y = self.get_cell_position(row, col)
 
-        # Calculate the center of the cell for the circle
-        circle_diameter = 40  # Adjust this to match the circle size
-        x_center = x
-        y_center = y
+    def toggle_animation_position(self):
+            """Alternate the circle's position between source and destination."""
+            if self.is_animating_to_source:
+                if self.current_source:
+                    self.animate_circle(*self.current_source, self.source)
+            else:
+                if self.current_destination:
+                    self.animate_circle(*self.current_destination, self.destination)
+            self.is_animating_to_source = not self.is_animating_to_source  # Toggle direction
 
+    def animate_circle(self, row, col, location):
+            """Animate the circle to move to a specific grid cell."""
+            # Calculate the position of the target cell
+            x = 0
+            y = 0
 
-        # Animate the circle to the new position
-        self.circle_animation.stop()  # Stop any ongoing animation
-        self.circle_animation.setStartValue(self.circle_label.geometry())
-        self.circle_animation.setEndValue(QRect(x_center, y_center, circle_diameter, circle_diameter))
-        self.circle_animation.start()
-        self.circle_label.show()
+            if location == "CRANE_REST":
+                x, y = 1125, 280
+            elif location == "TRUCK":
+                x, y = 975, 440
+            else:
+                x, y = self.get_cell_position(row, col)
+
+            # Animate the circle to the new position
+            circle_diameter = 40  # Adjust this to match the circle size
+            x_center = x
+            y_center = y
+
+            self.circle_animation.stop()  # Stop any ongoing animation
+            self.circle_animation.setStartValue(self.circle_label.geometry())
+            self.circle_animation.setEndValue(QRect(x_center, y_center, circle_diameter, circle_diameter))
+            self.circle_animation.start()
+            self.circle_label.show()
 
 
 
@@ -222,12 +319,10 @@ class BalancingLoadingScreen(QWidget):
         # Get grid geometry (top-left corner position of the grid)
         # self.right_grid_layout.
  
-        grid_bottom_left_x = 1252
-        grid_bottom_left_y = 655
+        grid_bottom_left_x = 1190
+        grid_bottom_left_y = 695
 
         # Cell dimensions
-        cell_width = 40  # Fixed size for grid cells
-        cell_height = 40
 
         # Calculate position of the top-left corner of the cell
         x = grid_bottom_left_x + (col - 1) * 40
@@ -242,21 +337,20 @@ class BalancingLoadingScreen(QWidget):
         """Update a cell in the left grid."""
         self.left_grid_layout.update_cell(row, col, text, color)
 
-    def update_right_grid(self, row, col, text, color="white"):
+    def update_right_grid(self, row, col, text, color="white", metadata={}):
         """Update a cell in the right grid."""
         n_row, n_col = self.right_grid_dims
         r = n_row - row
         c = col - 1
-        self.right_grid_layout.update_cell(r, c, text, color)
+        self.right_grid_layout.update_cell(r, c, text, color, metadata)
 
     def set_moves(self, moves):
         """Set the moves for the screen."""
         self.moves = moves
         self.current_move_index = 0
 
- 
     def next_move(self):
-        """Execute the next move in the list and animate the circle."""
+        """Execute the next move in the list, animate the circle, and log the move."""
         if self.current_move_index < len(self.moves):
             move = self.moves[self.current_move_index]
             print(f"Executing move: {move}")  # Log the move for debugging
@@ -265,25 +359,33 @@ class BalancingLoadingScreen(QWidget):
             source = move.m_from
             destination = move.m_to
 
-
-
+            # Log the move details in the console
+            move_text = f"Executing move: Move {move.container.name} " \
+                        f"from {source.location}[{source.m + 1}, {source.n + 1}] " \
+                        f"to {destination.location}[{destination.m + 1}, {destination.n + 1}] " \
+                        f"in {move.time_to_move} minutes"
+            self.console.append(move_text)
 
             # Adjust coordinates for grid logic
             source_row = source.m + 1
             source_col = source.n + 1
             dest_row = destination.m + 1
             dest_col = destination.n + 1
-
-
+            # Save the source and destination positions for animation
+            self.current_source = (source_row, source_col)
+            self.current_destination = (dest_row, dest_col)
+            self.source = source.location
+            self.destination = destination.location
 
             # Animate the crane to the destination cell
-            self.animate_circle(dest_row, dest_col, destination.location)
+                            # Start the animation timer
+            self.animation_timer.start(1000)  # Update every 1 second
 
             # Handle container movement
             if move.container.name != "UNUSED":
                 if source.location == "SHIP" and destination.location == "SHIP":
                     self.update_right_grid(source_row, source_col, "", "white")  # Clear source cell
-                    self.update_right_grid(dest_row, dest_col, move.container.name, "white")  # Update destination cell
+                    self.update_right_grid(dest_row, dest_col, move.container.name, "white", {"Name": move.container.name, "Weight": "50kg", "ID": 30})  # Update destination cell
 
                 elif source.location == "SHIP" and destination.location == "TRUCK":
                     self.update_right_grid(source_row, source_col, "", "white")  # Clear the ship cell
@@ -291,27 +393,12 @@ class BalancingLoadingScreen(QWidget):
 
                 elif source.location == "TRUCK" and destination.location == "SHIP":
                     self.truck_widget.clear_container()  # Clear the truck
-                    self.update_right_grid(dest_row, dest_col, move.container.name, "white")  # Add to the ship
+                    self.update_right_grid(dest_row, dest_col, move.container.name, "white", {"Name": move.container.name, "Weight": "50kg", "ID": 30})  # Add to the ship
 
             # Increment the move index
             self.current_move_index += 1
         else:
+            self.console.append("No more moves.")  # Notify when there are no more moves
             print("No more moves.")
-
-
-
-    def get_crane_position(self):
-        """Get the absolute pixel position of the crane."""
-        return self.crane.geometry().center().x(), self.crane.geometry().center().y()
-
-    def get_truck_position(self):
-        """Get the absolute pixel position of the truck."""
-        return self.truck_widget.geometry().center().x(), self.truck_widget.geometry().center().y()
-    
-    # def mousePressEvent(self, event):
-    #     """Capture mouse click and print the screen coordinates."""
-    #     x = event.globalX()
-    #     y = event.globalY()
-    #     print(f"Screen coordinates: x={x}, y={y}")
 
 

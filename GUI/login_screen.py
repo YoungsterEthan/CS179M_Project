@@ -149,7 +149,7 @@ class LoginScreen(QWidget):
         username = self.username_field.text()
         password = self.password_field.text()
 
-        if username == "user" and password == "password":
+        if username == "" and password == "":
             self.error_label.hide()
             self.switch_to_task_selection()
         else:
