@@ -110,10 +110,12 @@ class LoadState(State):
 
             containers_above = state.containers_above(pos)
             prev = self.crane_position
+            bad = False
             while containers_above:
                 above_pos = containers_above.pop()
                 if above_pos in state.containers_to_unload:
-                    continue
+                    bad = True
+                    break
                 # move to the current container to move
                 if prev != above_pos:
                     (prev, cost) = state.crane_position.move_to(above_pos, state.ship if above_pos.in_ship() else state.buffer)
@@ -126,6 +128,9 @@ class LoadState(State):
                 state.crane_position = copy.deepcopy(move_to)
                 state.moves.append(Move(above_pos, move_to, cost, state.ship[move_to.m][move_to.n]))
                 state.g += cost
+
+            if bad:
+                continue
 
             # move to the container
             if state.crane_position != pos:

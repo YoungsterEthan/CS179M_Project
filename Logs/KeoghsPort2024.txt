@@ -659,3 +659,13 @@
 2024-12-03 18:20 Manifest ShipCase4.txt is opened, there are 7 containers on the ship
 2024-12-03 18:20 Finishes a cycle. Manifest ShipCase4OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
 2024-12-03 18:20 Manifest ShipCase5.txt is opened, there are 5 containers on the ship
+2024-12-08 22:11 Manifest ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-08 22:11 Finishes a cycle. Manifest ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-08 22:25 Manifest ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-08 22:25 Finishes a cycle. Manifest ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-08 22:25 Manifest ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-08 22:25 Finishes a cycle. Manifest ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed
+2024-12-08 22:26 Manifest ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-08 22:28 Manifest ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-08 22:32 Manifest ShipCase3.txt is opened, there are 6 containers on the ship
+2024-12-08 22:32 Finishes a cycle. Manifest ShipCase3OUTBOUND.txt was written to desktop, and a reminder pop-up to operator to send file was displayed

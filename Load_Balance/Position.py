@@ -38,7 +38,7 @@ class Position:
         # move within the same location
         if self.location == pos.location:
             assert self.location == Location.SHIP or self.location == Location.BUFFER, "Invalid move, " + self.location + " is not big enough for a move"
-            in_virtual = self.in_ship_virtual_cell() or self.in_buf_virtual_cell() or pos.in_ship_virtual_cell() or pos.in_buf_virtual_cell()
+            in_virtual = self.in_virtual_cell() or pos.in_virtual_cell()
             if in_virtual or loc == None:
                 if not in_virtual: # if either location is a virtual cell the manhattan distance actually is correct
                     print("(move_to)WARNING: No location data provided for move within the same location, assuming a manhattan distance")
@@ -122,7 +122,7 @@ class Position:
         # return the prev pos and cost of this move
         return (old_p, c)
 
-    def is_virtual_cell(self):
+    def in_virtual_cell(self):
         return self.in_buf_virtual_cell() or self.in_ship_virtual_cell()
 
     def in_buf_virtual_cell(self):

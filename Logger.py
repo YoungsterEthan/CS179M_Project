@@ -9,7 +9,6 @@ def get_time():
 
 class Logger:
     def __init__(self):
-        self.operator = None
         pst = timezone(timedelta(hours=-8))
         now = datetime.now(pst)
         self.logname = "KeoghsPort" + str(now.strftime("%Y")) +  ".txt"

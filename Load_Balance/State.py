@@ -176,14 +176,6 @@ class State:
                 else:
                     self.buffer_height_map[pos1.n] -= 1
                     self.buffer_height_map[pos2.n] += 1
-
-    def set_at(self, pos, container):
-        if pos.in_ship():
-            self.ship[pos.m][pos.n] = container
-            self.ship_height_map[pos.n] -= 1
-        else:
-            self.buffer[pos.m][pos.n] = container
-            self.buffer_height_map[pos.n] -= 1
     
     def move_to_all_open_positions(self, start_pos, states, open_positions=None):
         if open_positions is None:
