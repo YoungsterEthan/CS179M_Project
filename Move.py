@@ -13,3 +13,8 @@ class Move:
 
     def __str__(self):
         return "Move " + str(self.container) + " from " + str(self.m_from) + " to " + str(self.m_to) + " in " + str(self.time_to_move) + " minutes"
+    
+    def __eq__(self, other):
+        if not isinstance(other, Move):
+            return False
+        return self.m_from == other.m_from and self.m_to == other.m_to and self.time_to_move == other.time_to_move and self.container == other.container
