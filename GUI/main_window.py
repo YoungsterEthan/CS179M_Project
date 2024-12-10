@@ -109,9 +109,6 @@ class MainWindow(QMainWindow):
         """
         grid_rows, grid_cols = 10, 12  # Grid dimensions
 
-        # screen.update_right_grid(, 1, "", "black")
-
-
         for line in self.manifest_data:
             try:
                 # Parse the manifest line

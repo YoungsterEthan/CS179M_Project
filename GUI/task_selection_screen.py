@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (
     QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QMessageBox, QFileDialog
 )
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
 from ContainerData import ContainerData
 from Manifest import Manifest
 from Loader import Loader
@@ -32,19 +33,17 @@ class TaskSelectionScreen(QWidget):
 
         # Balancing Task Button
         self.balancing_button = QPushButton("Balancing Task")
+        self.balancing_button.setFont(QFont("Arial", 12, QFont.Bold))
         self.balancing_button.setFixedSize(300, 100)
         self.balancing_button.setStyleSheet(
             """
             QPushButton {
-                background-color: #f0f0f0;
-                border: 2px solid black;
+                background-color: #4682B4;  /* Steel Blue */
+                color: white;
                 border-radius: 10px;
-                color: black;
-                font-size: 16px;
-                padding: 10px;
             }
             QPushButton:hover {
-                background-color: #e0e0e0;
+                background-color: #1E90FF;  /* Dodger Blue */
             }
             """
         )
@@ -52,23 +51,22 @@ class TaskSelectionScreen(QWidget):
 
         # Loading Task Button
         self.loading_button = QPushButton("Loading/Unloading Task")
+        self.loading_button.setFont(QFont("Arial", 12, QFont.Bold))
         self.loading_button.setFixedSize(300, 100)
         self.loading_button.setStyleSheet(
             """
             QPushButton {
-                background-color: #f0f0f0;
-                border: 2px solid black;
+                background-color: #4682B4;  /* Steel Blue */
+                color: white;
                 border-radius: 10px;
-                color: black;
-                font-size: 16px;
-                padding: 10px;
             }
             QPushButton:hover {
-                background-color: #e0e0e0;
+                background-color: #1E90FF;  /* Dodger Blue */
             }
             """
         )
         self.loading_button.clicked.connect(lambda: self.upload_file("Loading/Unloading Task"))
+
 
         # Add buttons to the layout
         button_layout.addWidget(self.balancing_button)
@@ -103,9 +101,6 @@ class TaskSelectionScreen(QWidget):
                 loader = Loader(manifest)
                 moves = loader.load_unload(load, offload)
                 self.main_window.set_moves(moves)
-
-
-
 
 
             self.main_window.set_manifest_data(data)

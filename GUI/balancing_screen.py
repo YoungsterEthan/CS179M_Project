@@ -76,8 +76,8 @@ class GridWidget(QGridLayout):
 class TruckWidget(QLabel):
     def __init__(self):
         super().__init__()
-        self.setFixedSize(50, 50)  # Set the size of the truck
-        self.container_name = ""  # Stores the name of the container in the truck
+        self.setFixedSize(50, 50)
+        self.container_name = ""
 
     def paintEvent(self, event):
         """Draw the truck as a yellow circle and display container name if present."""
@@ -233,27 +233,27 @@ class BalancingLoadingScreen(QWidget):
 
         # Add a circle to indicate the crane/container
         self.circle_label = QLabel(self)
-        self.circle_label.setFixedSize(40, 40)  # Circle size (same as grid cells)
+        self.circle_label.setFixedSize(40, 40)
         self.circle_label.setStyleSheet("background-color: rgba(255, 165, 0, 180); border-radius: 20px;")
         self.circle_label.hide()  # Initially hidden
 
         # Initialize circle animation
         self.circle_animation = QPropertyAnimation(self.circle_label, b"geometry")
-        self.circle_animation.setDuration(500)  # Set animation duration (e.g., 500ms)
+        self.circle_animation.setDuration(500) 
         self.circle_animation.setEasingCurve(QEasingCurve.InOutQuad)  # Smooth transition
 
         # Timer for alternating animation
         self.animation_timer = QTimer()
         self.animation_timer.timeout.connect(self.toggle_animation_position)
-        self.is_animating_to_source = True  # Track the direction of the animation
+        self.is_animating_to_source = True 
 
-        self.current_source = None  # Track the current source position
-        self.current_destination = None  # Track the current destination position
+        self.current_source = None  
+        self.current_destination = None  #
 
         # Console for logging moves
         self.console = QTextEdit()
-        self.console.setReadOnly(True)  # Make it read-only
-        self.console.setFixedSize(500, 100)  # Adjust width and height for a smaller console
+        self.console.setReadOnly(True)
+        self.console.setFixedSize(500, 100) 
         self.console.setStyleSheet(
             """
             QTextEdit {
@@ -270,11 +270,11 @@ class BalancingLoadingScreen(QWidget):
 
         # Add the console in a bottom-centered position
         console_layout = QHBoxLayout()
-        console_layout.addStretch()  # Add flexible space to center the console
+        console_layout.addStretch()
         console_layout.addWidget(self.console)
-        console_layout.addStretch()  # Add flexible space to center the console
+        console_layout.addStretch()
 
-        layout.addLayout(console_layout)  # Add the console layout to the main layout
+        layout.addLayout(console_layout)
 
 
 
@@ -282,11 +282,11 @@ class BalancingLoadingScreen(QWidget):
             """Alternate the circle's position between source and destination."""
             if self.is_animating_to_source:
                 if self.current_source:
-                    self.animate_circle(*self.current_source, self.source)
+                    self.animate_circle(*self.current_source, self.source.location)
             else:
                 if self.current_destination:
-                    self.animate_circle(*self.current_destination, self.destination)
-            self.is_animating_to_source = not self.is_animating_to_source  # Toggle direction
+                    self.animate_circle(*self.current_destination, self.destination.location)
+            self.is_animating_to_source = not self.is_animating_to_source
 
     def animate_circle(self, row, col, location):
             """Animate the circle to move to a specific grid cell."""
@@ -297,12 +297,15 @@ class BalancingLoadingScreen(QWidget):
             if location == "CRANE_REST":
                 x, y = 1125, 280
             elif location == "TRUCK":
-                x, y = 975, 440
-            else:
+                x, y = 1020, 475
+            elif location == "SHIP":
                 x, y = self.get_cell_position(row, col)
+            else:
+                x, y = self.get_left_cell_position(row, col)
+                
 
             # Animate the circle to the new position
-            circle_diameter = 40  # Adjust this to match the circle size
+            circle_diameter = 40 
             x_center = x
             y_center = y
 
@@ -312,30 +315,36 @@ class BalancingLoadingScreen(QWidget):
             self.circle_animation.start()
             self.circle_label.show()
 
-
-
     def get_cell_position(self, row, col):
         """Calculate the top-left position of a grid cell for the circle."""
-        # Get grid geometry (top-left corner position of the grid)
-        # self.right_grid_layout.
- 
         grid_bottom_left_x = 1190
         grid_bottom_left_y = 695
 
-        # Cell dimensions
+
+        x = grid_bottom_left_x + (col - 1) * 40
+        y = grid_bottom_left_y - (row - 1) * 50
+
+        return x, y
+    
+    def get_left_cell_position(self, row, col):
+        """Calculate the top-left position of a grid cell for the circle."""
+        grid_bottom_left_x = 13
+        grid_bottom_left_y = 685
+
 
         # Calculate position of the top-left corner of the cell
         x = grid_bottom_left_x + (col - 1) * 40
-        y = grid_bottom_left_y - (row - 1) * 50
-        # print(f"Cell ({row}, {col}) calculated position: ({x}, {y})")
+        y = grid_bottom_left_y - (row - 1) * 60
 
         return x, y
 
-
-
-    def update_left_grid(self, row, col, text, color="white"):
+    def update_left_grid(self, row, col, text, color="white", metadata={}):
         """Update a cell in the left grid."""
         self.left_grid_layout.update_cell(row, col, text, color)
+        n_row, n_col = self.right_grid_dims
+        r = n_row - row
+        c = col - 1
+        self.left_grid_layout.update_cell(r, c, text, color, metadata)
 
     def update_right_grid(self, row, col, text, color="white", metadata={}):
         """Update a cell in the right grid."""
@@ -353,7 +362,7 @@ class BalancingLoadingScreen(QWidget):
         """Execute the next move in the list, animate the circle, and log the move."""
         if self.current_move_index < len(self.moves):
             move = self.moves[self.current_move_index]
-            print(f"Executing move: {move}")  # Log the move for debugging
+            print(f"Executing move: {move}")
 
             # Determine source and destination positions
             source = move.m_from
@@ -374,31 +383,37 @@ class BalancingLoadingScreen(QWidget):
             # Save the source and destination positions for animation
             self.current_source = (source_row, source_col)
             self.current_destination = (dest_row, dest_col)
-            self.source = source.location
-            self.destination = destination.location
+            self.source = source
+            self.destination = destination
 
-            # Animate the crane to the destination cell
-                            # Start the animation timer
-            self.animation_timer.start(1000)  # Update every 1 second
+            # Start the animation timer
+            self.animation_timer.start(1000)
 
             # Handle container movement
-            if move.container.name != "UNUSED":
-                if source.location == "SHIP" and destination.location == "SHIP":
-                    self.update_right_grid(source_row, source_col, "", "white")  # Clear source cell
-                    self.update_right_grid(dest_row, dest_col, move.container.name, "white", {"Name": move.container.name, "Weight": "50kg", "ID": 30})  # Update destination cell
-
-                elif source.location == "SHIP" and destination.location == "TRUCK":
-                    self.update_right_grid(source_row, source_col, "", "white")  # Clear the ship cell
-                    self.truck_widget.update_container(move.container.name)  # Add container to the truck
-
-                elif source.location == "TRUCK" and destination.location == "SHIP":
-                    self.truck_widget.clear_container()  # Clear the truck
-                    self.update_right_grid(dest_row, dest_col, move.container.name, "white", {"Name": move.container.name, "Weight": "50kg", "ID": 30})  # Add to the ship
+            self._handle_container_movement(move)
 
             # Increment the move index
             self.current_move_index += 1
         else:
             self.console.append("No more moves.")  # Notify when there are no more moves
             print("No more moves.")
+
+    def _handle_container_movement(self, move):
+        if move.container.name != "UNUSED":
+            if self.source.location == "SHIP" and self.destination.location == "SHIP":
+                self.update_right_grid(*self.current_source, "", "white")  # Clear source cell
+                self.update_right_grid(*self.current_destination, move.container.name, "white", {"Name": move.container.name, "Weight": move.container.weight})  # Update destination cell
+
+            elif self.source.location == "SHIP" and self.destination.location == "TRUCK":
+                self.update_right_grid(*self.current_source, "", "white")  # Clear the ship cell
+                self.truck_widget.update_container(move.container.name)  # Add container to the truck
+
+            elif self.source.location == "TRUCK" and self.destination.location == "SHIP":
+                self.truck_widget.clear_container()  # Clear the truck
+                self.update_right_grid(*self.current_destination, move.container.name, "white", {"Name": move.container.name, "Weight": move.container.weight})  # Add to the ship
+
+            elif self.source.location == "SHIP" and self.destination.location == "BUFFER":
+                self.update_right_grid(*self.current_source, "", "white")  # Clear source cell
+                self.update_left_grid(*self.current_destination, "", "white", {"Name": move.container.name, "Weight": move.container.weight})  # update buffer
 
 
