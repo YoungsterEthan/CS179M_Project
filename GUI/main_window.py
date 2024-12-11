@@ -15,7 +15,8 @@ from Loader import Loader
 from Manifest import Manifest
 import os
 from ContainerData import ContainerData
-
+from RecoveryLogger import RecoveryLogger
+import os
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -35,6 +36,9 @@ class MainWindow(QMainWindow):
         self.current_move_index = 0  # Track the current move
         self.moves = []  # Store moves
 
+        # Initialize the RecoveryLogger
+        self.recovery_logger = RecoveryLogger(recovery_path="")  
+
         # Initialize screens
         
         self.login_screen = LoginScreen(self.show_task_selection_screen)
@@ -46,14 +50,14 @@ class MainWindow(QMainWindow):
         self.manifest_viewer_screen = ManifestViewerScreen(self.manifest_data, self.show_task_selection_screen)
 
         # Balancing and Loading screens with a link to view the manifest
-        self.balancing_screen = BalancingLoadingScreen(
+        self.balancing_screen = BalancingLoadingScreen(self,
             title="Balancing Screen",
             switch_to_home=self.show_task_selection_screen,
             grid_left_dims=(8, 24), 
             grid_right_dims=(10, 12), 
             show_manifest_viewer=self.show_manifest_viewer_screen 
         )
-        self.loading_screen = BalancingLoadingScreen(
+        self.loading_screen = BalancingLoadingScreen(self,
             title="Loading/Unloading Screen",
             switch_to_home=self.show_task_selection_screen,
             grid_left_dims=(8, 24),
@@ -71,6 +75,36 @@ class MainWindow(QMainWindow):
         # Show the login screen initially
         self.central_widget.setCurrentWidget(self.login_screen)
 
+        if self.recovery_logger.fexists():
+
+            with open('last_opened.txt', "r") as file:
+                data = file.readlines()
+                self.set_manifest_data(data)
+
+
+
+            self.show_message(
+                    "Recovery",
+                    "A previous session was found. Moves have been recovered.",
+                    error=False,
+                )
+            self.recover_moves()
+
+            if(self.recovery_logger.last_task == "Balancing\n"):
+                print("WE BALAnCING")
+                self.show_balancing_screen()
+                for i in range(self.current_move_index):
+                    self.balancing_screen.next_move()
+            if(self.recovery_logger.last_task == "Loading/Unloading Task\n"):
+                print("WE loadin")
+                self.show_loading_screen()
+                for i in range(self.current_move_index):
+                    self.loading_screen.next_move()
+
+            
+
+
+
 
     def show_task_selection_screen(self):
         """Switch to the Task Selection screen."""
@@ -78,11 +112,13 @@ class MainWindow(QMainWindow):
 
     def show_balancing_screen(self):
         """Switch to the Balancing screen."""
+
         self.populate_ship(self.balancing_screen)  
         self.central_widget.setCurrentWidget(self.balancing_screen)
 
     def show_loading_screen(self):
         """Switch to the Loading screen."""
+
         self.populate_ship(self.loading_screen)  
         self.central_widget.setCurrentWidget(self.loading_screen)
 
@@ -139,11 +175,85 @@ class MainWindow(QMainWindow):
                 continue
 
 
-    def set_moves(self, moves):
+    def set_moves(self, moves, task):
         """Set the moves to be displayed on the balancing screen."""
         self.moves = moves
-        self.balancing_screen.set_moves(moves)
-        self.loading_screen.set_moves(moves)
+
+        print("TASKSASR:", task)
+
+        if(task == "Balancing\n"):
+            print('test1')
+            self.balancing_screen.set_moves(moves)
+        else:
+            print('test2')
+            self.loading_screen.set_moves(moves)
+
+        # Create a recovery file using RecoveryLogger
+        if not self.recovery_logger.fexists():
+            self.recovery_logger.last_task = task
+            self.recovery_logger.create(moves)
+
+    def save_move_progress(self):
+        """Save the current move progress to the recovery file."""
+        self.recovery_logger.save_next_move()
+
+    def recover_moves(self):
+        """Recover moves from the recovery file."""
+        moves, last_completed = self.recovery_logger.recover()
+        print("moves: ", moves)
+        print("last completed:", last_completed)
+        print(f'LAST TASK: {self.recovery_logger.last_task}')
+        if moves:
+            print("runi")
+            self.set_moves(moves, self.recovery_logger.last_task)
+            self.current_move_index = last_completed  # Restore last completed move index
+            # print("index:", self.current_move_index)
+            # self.balancing_screen.current_move_index = last_completed  # Sync with BalancingLoadingScreen
+
+    def show_message(self, title, message, error=False):
+        """Show a custom message box with black text."""
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle(title)
+        msg_box.setText(message)
+
+        # Set the message box icon
+        if error:
+            msg_box.setIcon(QMessageBox.Critical)
+        else:
+            msg_box.setIcon(QMessageBox.Information)
+
+
+        msg_box.setStyleSheet(
+            """
+            QMessageBox {
+                background-color: white;
+                color: black;  /* Black text color */
+            }
+            QMessageBox QLabel {
+                color: black;  /* Ensures text in QLabel remains black */
+            }
+            QMessageBox QPushButton {
+                background-color: #f0f0f0;
+                border: 1px solid black;
+                color: black;
+            }
+            """
+        )
+        msg_box.exec_()
+
+
+
+    def delete_last(self):
+        """Delete a file if it exists."""
+        file_path ='last_opened.txt'
+        if os.path.exists(file_path):
+            try:
+                os.remove(file_path)
+                print(f"File '{file_path}' has been deleted.")
+            except Exception as e:
+                print(f"Error deleting file '{file_path}': {e}")
+        else:
+            print(f"File '{file_path}' does not exist.")
 
 
  

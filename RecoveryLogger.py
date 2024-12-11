@@ -16,6 +16,7 @@ class RecoveryLogger:
         self.recovery_file = "recover.txt"
         self.recovery_path = recovery_path
         self.lines = None
+        self.last_task = ""
 
     def fexists(self):
         exists = False
@@ -30,6 +31,7 @@ class RecoveryLogger:
     ## Write a new recovery file using a list of Moves
     def create(self, moves):
         exists = self.fexists()
+
     
         assert not exists, "create() should not be called if a recovery file already exists"
         assert self.lines == None, "create() and recover() should not be called in the same instance of RecoveryLogger"
@@ -39,6 +41,8 @@ class RecoveryLogger:
             self.lines = [str(len(moves)) + "\n"]
             f.write(str(0) + "\n")
             self.lines.append(str(0) + "\n")
+            f.write(self.last_task)
+            self.lines.append(self.last_task + '\n')
             for i in range(len(moves)):
                 f.write(self.stringify_move(moves[i]) + "\n")
                 self.lines.append(self.stringify_move(moves[i]) + "\n")
@@ -62,9 +66,10 @@ class RecoveryLogger:
         
         n_steps = int(self.lines[0])
         last_completed = int(self.lines[1])
+        self.last_task = self.lines[2]
         moves = []
         for i in range(n_steps):
-            moves.append(self.parse_move(self.lines[i+2]))
+            moves.append(self.parse_move(self.lines[i+3]))
 
         return moves, last_completed
     
@@ -87,9 +92,12 @@ class RecoveryLogger:
             return
         with open(self.recovery_path  + self.recovery_file, "w") as f:
             f.write(self.lines[0])
-            f.write(str(int(self.lines[1])+1) + "\n")
-            for i in range(len(self.lines)-2):
-                f.write(self.lines[i+2])
+            print(self.lines[1])
+            self.lines[1] = str(int(self.lines[1])+1)
+            f.write(self.lines[1] + "\n")
+            f.write(self.last_task)
+            for i in range(len(self.lines)-3):
+                f.write(self.lines[i+3])
 
     ## Delete the recovery file
     def delete(self):

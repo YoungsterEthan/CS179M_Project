@@ -10,6 +10,7 @@ from ContainerData import ContainerData
 from Manifest import Manifest
 from Loader import Loader
 from Balancer import Balancer
+from RecoveryLogger import RecoveryLogger
 import os
 from load_unload_selction_screen import *
 
@@ -67,6 +68,8 @@ class TaskSelectionScreen(QWidget):
         )
         self.loading_button.clicked.connect(lambda: self.upload_file("Loading/Unloading Task"))
 
+        self.current_move_index = 0
+
 
         # Add buttons to the layout
         button_layout.addWidget(self.balancing_button)
@@ -81,7 +84,22 @@ class TaskSelectionScreen(QWidget):
             self, f"Open {task_name} File", "", "Text Files (*.txt);;All Files (*)"
         )
         if file_path:
+            # Save the contents of the file to "last_opened.txt"
+            try:
+                with open(file_path, "r") as source_file:
+                    contents = source_file.read()  # Read the contents of the uploaded file
+
+                with open("last_opened.txt", "w") as destination_file:
+                    destination_file.write(contents)  # Write contents to "last_opened.txt"
+
+                print(f"File contents saved to 'last_opened.txt'")
+            except Exception as e:
+                print(f"Error saving file contents: {e}")
+                self.show_message("Error", f"Failed to save file contents: {e}", error=True)
+
+            # Process the file for the selected task
             self.process_file(file_path, task_name)
+
 
     def process_file(self, file_path, task_name):
         """Validate and process the selected file, then switch to the appropriate screen."""
@@ -97,28 +115,25 @@ class TaskSelectionScreen(QWidget):
             manifest.read_manifest()
 
             def handle_selection(offload, load):
-                # print("in selection")
                 loader = Loader(manifest)
                 moves = loader.load_unload(load, offload)
-                self.main_window.set_moves(moves)
-
+                self.main_window.set_moves(moves, "Loading/Unloading Task\n")
+                
+                
 
             self.main_window.set_manifest_data(data)
 
             if task_name == "Loading/Unloading Task":
                 selection_screen = LoadUnloadSelectionScreen(manifest, handle_selection)
                 selection_screen.exec_()
+                self.switch_to_loading()     
             else:
+                print("UH BALANCING")
                 balancer = Balancer(manifest)
                 moves = balancer.balance()
-                self.main_window.set_moves(moves)
-            
-
-            # Transition to the appropriate screen
-            if task_name == "Balancing Task":
+                self.main_window.set_moves(moves, "Balancing\n")
                 self.switch_to_balancing()
-            elif task_name == "Loading/Unloading Task":
-                self.switch_to_loading()
+            
 
         except Exception as e:
             # Show error message

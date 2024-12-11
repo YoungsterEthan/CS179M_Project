@@ -103,8 +103,9 @@ class TruckWidget(QLabel):
 
 
 class BalancingLoadingScreen(QWidget):
-    def __init__(self, title, switch_to_home, grid_left_dims, grid_right_dims, show_manifest_viewer):
+    def __init__(self, main_window, title, switch_to_home, grid_left_dims, grid_right_dims, show_manifest_viewer):
         super().__init__()
+        self.main_window = main_window
 
         # Main layout
         layout = QVBoxLayout()
@@ -360,9 +361,11 @@ class BalancingLoadingScreen(QWidget):
 
     def next_move(self):
         """Execute the next move in the list, animate the circle, and log the move."""
+        
         if self.current_move_index < len(self.moves):
             move = self.moves[self.current_move_index]
             print(f"Executing move: {move}")
+            self.main_window.save_move_progress()
 
             # Determine source and destination positions
             source = move.m_from
@@ -394,6 +397,11 @@ class BalancingLoadingScreen(QWidget):
 
             # Increment the move index
             self.current_move_index += 1
+
+            if self.current_move_index >= len(self.moves):
+                print("All moves completed.")
+                self.main_window.recovery_logger.delete()
+                self.main_window.delete_last()
         else:
             self.console.append("No more moves.")  # Notify when there are no more moves
             print("No more moves.")
