@@ -1,18 +1,14 @@
-import sys
-sys.path.insert(0, '/Users/youngsterethan/Desktop/CS179M_Project/CS179M_Project-1/Load_Balance')
-sys.path.insert(0, '/Users/youngsterethan/Desktop/CS179M_Project/CS179M_Project-1/')
 from PyQt5.QtWidgets import (
     QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QMessageBox, QFileDialog
 )
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from ContainerData import ContainerData
 from Manifest import Manifest
-from Loader import Loader
-from Balancer import Balancer
-from RecoveryLogger import RecoveryLogger
+# from Manifest import Manifest
+from Load_Balance.Loader import Loader
+from Load_Balance.Balancer import Balancer
 import os
-from load_unload_selction_screen import *
+from GUI.load_unload_selction_screen import *
 
 class TaskSelectionScreen(QWidget):
     def __init__(self, main_window, switch_to_balancing, switch_to_loading):

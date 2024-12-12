@@ -1,20 +1,13 @@
 import sys
-sys.path.insert(0, '/Users/youngsterethan/Desktop/CS179M_Project/CS179M_Project-1/Load_Balance')
-sys.path.insert(0, '/Users/youngsterethan/Desktop/CS179M_Project/CS179M_Project-1/')
-
-
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QStackedWidget
 )
-from balancing_screen import *
-from login_screen import * 
-from manifest_view_screen import *
-from task_selection_screen import *
+from GUI.balancing_screen import *
+from GUI.login_screen import * 
+from GUI.manifest_view_screen import *
+from GUI.task_selection_screen import *
 
-from Loader import Loader
-from Manifest import Manifest
 import os
-from ContainerData import ContainerData
 from RecoveryLogger import RecoveryLogger
 import os
 
@@ -255,16 +248,3 @@ class MainWindow(QMainWindow):
         else:
             print(f"File '{file_path}' does not exist.")
 
-
- 
-            
-        
-
-
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec_())
