@@ -1,6 +1,8 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, '/Users/youngsterethan/Desktop/CS179M_Project/CS179M_Project-1/Load_Balance')
+sys.path.insert(0, '/Users/youngsterethan/Desktop/CS179M_Project/CS179M_Project-1/')
 
 import unittest
 from Load_Balance.Loader import Loader

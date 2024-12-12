@@ -103,3 +103,13 @@ class Manifest:
             for i in OutboundList:
                 f.write(i)
         self.log.log_close_manifest(self)
+
+    def get_containers(self):
+        """Return a list of ContainerData objects for containers in the manifest."""
+        containers = []
+        for row in self.ContainerMatrix:
+            for container in row:
+                if container.name != "UNUSED" and container.name != "NAN":
+                    weight = int(container.weight.strip("{}"))  # Convert weight to an integer
+                    containers.append(ContainerData(container.name, weight))
+        return containers
