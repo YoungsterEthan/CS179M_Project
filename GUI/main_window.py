@@ -148,9 +148,9 @@ class MainWindow(QMainWindow):
         for line in self.manifest_data:
             try:
                 # Parse the manifest line
-                coordinates, container_id, content = line.split(", ")
+                coordinates, weight, content = line.split(", ")
                 row, col = map(int, coordinates.strip("[]").split(","))
-                metadata = {"Name": content, "Weight": "50kg", "ID": container_id}
+                metadata = {"Name": content, "Weight": weight}
                 # print(f"Original coordinates: row={row}, col={col}")
 
                 # Subtract 1 for zero-based indexing

@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QCheckBox
+    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QCheckBox, QMessageBox
 )
 from PyQt5.QtCore import Qt
 from ContainerData import ContainerData
+
 class LoadUnloadSelectionScreen(QDialog):
     def __init__(self, manifest, confirm_callback):
         super().__init__()
@@ -80,16 +81,24 @@ class LoadUnloadSelectionScreen(QDialog):
 
     def add_load_container(self):
         """Add a container to the load list."""
-        name = self.container_name_input.text()
-        weight = self.container_weight_input.text()
-        if name and weight.isdigit():
-            container = ContainerData(name, weight)
-            self.load_containers.append(container)
-            self.container_name_input.clear()
-            self.container_weight_input.clear()
-            self.update_load_list()
-        else:
-            print("Invalid input for load container.")
+        name = self.container_name_input.text().strip()
+        weight = self.container_weight_input.text().strip()
+
+        # Validate input
+        if not name or not weight.isdigit():
+            self.show_message("Invalid Input", "Please enter a valid container name and weight.")
+            return
+
+        if name in {"NAN", "UNUSED"}:
+            self.show_message("Invalid Container Name", "The container name cannot be 'NAN' or 'UNUSED'.")
+            return
+
+        # Add container
+        container = ContainerData(name, weight)
+        self.load_containers.append(container)
+        self.container_name_input.clear()
+        self.container_weight_input.clear()
+        self.update_load_list()
 
     def update_load_list(self):
         """Update the list of containers to load."""
@@ -101,3 +110,26 @@ class LoadUnloadSelectionScreen(QDialog):
         self.confirm_callback(self.offload_containers, self.load_containers)
         self.accept()
 
+    def show_message(self, title, message):
+        """Show a custom error message."""
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle(title)
+        msg_box.setText(message)
+        msg_box.setIcon(QMessageBox.Warning)
+        msg_box.setStyleSheet(
+            """
+            QMessageBox {
+                background-color: white;
+                color: black;
+            }
+            QMessageBox QLabel {
+                color: black;
+            }
+            QMessageBox QPushButton {
+                background-color: #f0f0f0;
+                border: 1px solid black;
+                color: black;
+            }
+            """
+        )
+        msg_box.exec_()
