@@ -71,7 +71,6 @@ class MainWindow(QMainWindow):
         self.central_widget.setCurrentWidget(self.login_screen)
 
         if self.recovery_logger.fexists():
-            self.opened = True
 
             with open('last_opened.txt', "r") as file:
                 data = file.readlines()
@@ -97,9 +96,6 @@ class MainWindow(QMainWindow):
                 for i in range(self.current_move_index):
                     self.loading_screen.next_move()
 
-            
-
-
 
 
     def show_task_selection_screen(self):
@@ -111,7 +107,6 @@ class MainWindow(QMainWindow):
         print('self.current_move_index:', self.current_move_index)
 
         if self.opened == False:
-            print('iga')
             self.opened = True
             self.populate_ship(self.balancing_screen)  
         self.central_widget.setCurrentWidget(self.balancing_screen)
@@ -119,7 +114,6 @@ class MainWindow(QMainWindow):
     def show_loading_screen(self):
         """Switch to the Loading screen."""
         if self.opened == False:
-            print("iga")
             self.opened = True
             self.populate_ship(self.loading_screen)  
         self.central_widget.setCurrentWidget(self.loading_screen)

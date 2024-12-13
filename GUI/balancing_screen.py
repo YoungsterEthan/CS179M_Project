@@ -122,6 +122,7 @@ class BalancingLoadingScreen(QWidget):
         self.right_grid_dims = grid_right_dims
 
         self.moves = []
+        self.time_remaining = 0
 
         # Horizontal layout for grids, crane, and truck
         main_layout = QHBoxLayout()
@@ -183,9 +184,9 @@ class BalancingLoadingScreen(QWidget):
         controls_layout.addWidget(next_button)
 
         # Estimated Time Remaining
-        time_label = QLabel("Estimated Time Remaining: N/A")
-        time_label.setStyleSheet("font-size: 14px; color: black;")
-        controls_layout.addWidget(time_label)
+        self.time_label = QLabel("Estimated Time Remaining: N/A")
+        self.time_label.setStyleSheet("font-size: 14px; color: black;")
+        controls_layout.addWidget(self.time_label)
 
         # Manifest Button
         manifest_button = QPushButton("View Manifest")
@@ -358,6 +359,23 @@ class BalancingLoadingScreen(QWidget):
         """Set the moves for the screen."""
         self.moves = moves
         self.current_move_index = 0
+        self.calculate_total_time()
+        self.update_time_label
+
+    def calculate_total_time(self):
+        """Calculate the total time for all moves."""
+        self.total_time = sum(move.time_to_move for move in self.moves)
+
+    def calculate_remaining_time(self):
+        """Calculate the remaining time for the moves."""
+        remaining_moves = self.moves[self.current_move_index:]
+        return sum(move.time_to_move for move in remaining_moves)
+
+    def update_time_label(self):
+        """Update the time label with the remaining time."""
+        remaining_time = self.calculate_remaining_time()
+        self.time_label.setText(f"Estimated Time Remaining: {remaining_time} minutes")
+
 
     def next_move(self):
         """Execute the next move in the list, animate the circle, and log the move."""
@@ -397,6 +415,9 @@ class BalancingLoadingScreen(QWidget):
 
             # Increment the move index
             self.current_move_index += 1
+
+            # Update time label
+            self.update_time_label()
 
             if self.current_move_index >= len(self.moves):
                 print("All moves completed.")
