@@ -20,14 +20,9 @@ class Logger:
     #1 = onload
     #2 = unload
     #3 = moved within ship
-    def log_move(self, container, move):
+    def log_move(self, move):
         with open(self.logpath + self.logname, 'a+') as f:
-            if(move == 1):
-                f.write(get_time() +"\"" + container.name + "\"" +  " is onloaded\n")
-            elif(move == 2):
-                f.write(get_time() +"\"" + container.name + "\"" +  " is offloaded\n")
-            elif(move == 3):
-                f.write(get_time() +"\"" + container.name + "\"" +  " is moved within the ship\n")
+            f.write(get_time() + self.currentoperator + str(move) + "\n")
 
     def log_open_manifest(self, manifest):
         with open(self.logpath + self.logname, 'a+') as f:
