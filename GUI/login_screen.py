@@ -53,11 +53,13 @@ class CustomLineEdit(QLineEdit):
 
 
 class LoginScreen(QWidget):
-    def __init__(self, next_screen):
+    def __init__(self, next_screen, main_window):
         super().__init__()
         self.switch_screen = next_screen
+
+        self.main_window = main_window
         
-        self.logger = Logger()
+
 
         # Set background color
         self.setStyleSheet("background-color: #87CEEB;")  # Ocean-like light blue
@@ -158,7 +160,7 @@ class LoginScreen(QWidget):
     not username[0].isalpha() or  # Username must start with a letter
     not username.isalnum())  # Username must contain only alphanumeric characters
 ):
-            self.logger.log_sign_in(username)
+            self.main_window.logger.log_sign_in(username)
             self.error_label.hide()
             self.switch_screen()
             

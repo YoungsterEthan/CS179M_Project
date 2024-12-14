@@ -9,6 +9,7 @@ from GUI.task_selection_screen import *
 
 import os
 from RecoveryLogger import RecoveryLogger
+from Logger import Logger
 import os
 
 class MainWindow(QMainWindow):
@@ -35,9 +36,12 @@ class MainWindow(QMainWindow):
         self.recovery_logger = RecoveryLogger(recovery_path="")  
         self.current_task = 0
 
+        #initialize Logger
+        self.logger = Logger()
+
         # Initialize screens
         
-        self.login_screen = LoginScreen(self.show_task_selection_screen)
+        self.login_screen = LoginScreen(self.show_task_selection_screen, self)
         self.task_selection_screen = TaskSelectionScreen(
             self,
             self.show_balancing_screen,
@@ -72,12 +76,9 @@ class MainWindow(QMainWindow):
         self.central_widget.setCurrentWidget(self.login_screen)
 
         if self.recovery_logger.fexists():
-
             with open('last_opened.txt', "r") as file:
                 data = file.readlines()
                 self.set_manifest_data(data)
-
-
 
             self.show_message(
                     "Recovery",
@@ -117,7 +118,6 @@ class MainWindow(QMainWindow):
         self.central_widget.setCurrentWidget(self.balancing_screen)
 
     def show_loading_screen(self):
-
         self.current_task = self.show_loading_screen
         """Switch to the Loading screen."""
         if self.opened == False:
@@ -137,7 +137,7 @@ class MainWindow(QMainWindow):
     def update_manifest_viewer_screen(self):
         """Update the Manifest Viewer Screen with the latest manifest data."""
         self.central_widget.removeWidget(self.manifest_viewer_screen)
-        self.manifest_viewer_screen = ManifestViewerScreen(self.manifest_data, self.show_balancing_screen)
+        self.manifest_viewer_screen = ManifestViewerScreen(self.manifest_data, self.current_task)
         self.central_widget.addWidget(self.manifest_viewer_screen)
 
     def populate_ship(self, screen):

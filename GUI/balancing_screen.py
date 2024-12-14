@@ -113,9 +113,6 @@ class BalancingLoadingScreen(QWidget):
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignCenter)
 
-        # Initialize logger
-        self.logger = Logger()
-
         # Title
         title_label = QLabel(title)
         title_label.setStyleSheet("font-size: 20px; font-weight: bold; color: black;")
@@ -347,7 +344,7 @@ class BalancingLoadingScreen(QWidget):
             if location == "CRANE_REST":
                 x, y = 1125, 280
             elif location == "TRUCK":
-                x, y = 1020, 475
+                x, y = 1020, 435
             elif location == "SHIP":
                 x, y = self.get_cell_position(row, col)
             else:
@@ -368,7 +365,7 @@ class BalancingLoadingScreen(QWidget):
     def get_cell_position(self, row, col):
         """Calculate the top-left position of a grid cell for the circle."""
         grid_bottom_left_x = 1190
-        grid_bottom_left_y = 695
+        grid_bottom_left_y = 650
 
 
         x = grid_bottom_left_x + (col - 1) * 40
@@ -428,7 +425,7 @@ class BalancingLoadingScreen(QWidget):
             """Log the comment entered in the comment box."""
             comment = self.comment_box.text().strip()
             if comment:
-                self.logger.log_comment(comment)  # Log the comment using Logger
+                self.main_window.logger.log_comment(comment)  # Log the comment using Logger
                 self.console.append(f"Comment logged: {comment}")  # Display confirmation in the console
                 self.comment_box.clear()  # Clear the comment box
 
@@ -438,6 +435,7 @@ class BalancingLoadingScreen(QWidget):
         
         if self.current_move_index < len(self.moves):
             move = self.moves[self.current_move_index]
+            self.main_window.logger.log_move(move)
             print(f"Executing move: {move}")
             self.main_window.save_move_progress()
 
@@ -481,6 +479,8 @@ class BalancingLoadingScreen(QWidget):
                 self.main_window.delete_last()
         else:
             self.console.append("No more moves.")  # Notify when there are no more moves
+            self.console.append("Send Outbound Manifest to ship")
+            self.main_window.opened = False
             print("No more moves.")
 
     def _handle_container_movement(self, move):
