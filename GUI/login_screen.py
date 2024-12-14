@@ -52,9 +52,9 @@ class CustomLineEdit(QLineEdit):
 
 
 class LoginScreen(QWidget):
-    def __init__(self, switch_to_task_selection):
+    def __init__(self, next_screen):
         super().__init__()
-        self.switch_to_task_selection = switch_to_task_selection
+        self.switch_screen = next_screen
 
         # Set background color
         self.setStyleSheet("background-color: #87CEEB;")  # Ocean-like light blue
@@ -151,7 +151,7 @@ class LoginScreen(QWidget):
 
         if username == "" and password == "":
             self.error_label.hide()
-            self.switch_to_task_selection()
+            self.switch_screen()
         else:
             # Update and show the error message
             self.error_label.setText("Invalid credentials. Please try again.")

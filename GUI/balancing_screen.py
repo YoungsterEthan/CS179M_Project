@@ -1,8 +1,10 @@
 from PyQt5.QtWidgets import (
-    QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout, QTextEdit, QToolTip
+    QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout, QTextEdit, QToolTip, QLineEdit
 )
 from PyQt5.QtCore import Qt, QPropertyAnimation, QRect, QPointF, QEasingCurve, QTimer, QEvent
 from PyQt5.QtGui import QPainter, QBrush, QPen, QColor, QFont
+
+from Logger import Logger
 
 class GridWidget(QGridLayout):
     """Customizable grid for displaying containers."""
@@ -111,6 +113,9 @@ class BalancingLoadingScreen(QWidget):
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignCenter)
 
+        # Initialize logger
+        self.logger = Logger()
+
         # Title
         title_label = QLabel(title)
         title_label.setStyleSheet("font-size: 20px; font-weight: bold; color: black;")
@@ -164,6 +169,25 @@ class BalancingLoadingScreen(QWidget):
         controls_layout = QHBoxLayout()
         controls_layout.setSpacing(10)
 
+        # Back to Login Button
+        back_to_login_button = QPushButton("Back to Login")
+        back_to_login_button.setFont(QFont("Arial", 12, QFont.Bold))
+        back_to_login_button.setFixedSize(250, 40)
+        back_to_login_button.setStyleSheet(
+            """
+            QPushButton {
+                background-color: #4682B4;  /* Steel Blue */
+                color: white;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #1E90FF;  /* Dodger Blue */
+            }
+            """
+        )
+        back_to_login_button.clicked.connect(self.switch_to_login)
+        controls_layout.addWidget(back_to_login_button)
+
         # Next Move Button
         next_button = QPushButton("Next Move")
         next_button.setFont(QFont("Arial", 12, QFont.Bold))
@@ -206,6 +230,7 @@ class BalancingLoadingScreen(QWidget):
         )
         manifest_button.clicked.connect(show_manifest_viewer)
         controls_layout.addWidget(manifest_button)
+
 
         # Back Button
         back_button = QPushButton("Back to Home")
@@ -252,7 +277,7 @@ class BalancingLoadingScreen(QWidget):
         self.current_source = None  
         self.current_destination = None  #
 
-        # Console for logging moves
+        #Console for logging moves
         self.console = QTextEdit()
         self.console.setReadOnly(True)
         self.console.setFixedSize(500, 100) 
@@ -270,13 +295,36 @@ class BalancingLoadingScreen(QWidget):
             """
         )
 
-        # Add the console in a bottom-centered position
-        console_layout = QHBoxLayout()
-        console_layout.addStretch()
+        # Comment box for operator input
+        self.comment_box = QLineEdit()
+        self.comment_box.setPlaceholderText("Enter your comment here and press Enter...")
+        self.comment_box.setFixedSize(500, 30)
+        self.comment_box.setStyleSheet(
+            """
+            QLineEdit {
+                background-color: white;
+                color: black;
+                font-family: Arial, sans-serif;
+                font-size: 12px;
+                border-radius: 5px;
+                padding: 5px;
+                border: 2px solid #4682B4;  /* Steel Blue border */
+            }
+            """
+        )
+        self.comment_box.returnPressed.connect(self.log_comment)
+
+        # Add the console and comment box in a bottom-centered position
+        console_layout = QVBoxLayout()
         console_layout.addWidget(self.console)
-        console_layout.addStretch()
+        console_layout.addWidget(self.comment_box)
 
         layout.addLayout(console_layout)
+        self.setLayout(layout)
+
+    def switch_to_login(self):
+        """Switch to the login screen and save the current state."""
+        self.main_window.show_login_screen()
 
 
 
@@ -375,6 +423,14 @@ class BalancingLoadingScreen(QWidget):
         """Update the time label with the remaining time."""
         remaining_time = self.calculate_remaining_time()
         self.time_label.setText(f"Estimated Time Remaining: {remaining_time} minutes")
+
+    def log_comment(self):
+            """Log the comment entered in the comment box."""
+            comment = self.comment_box.text().strip()
+            if comment:
+                self.logger.log_comment(comment)  # Log the comment using Logger
+                self.console.append(f"Comment logged: {comment}")  # Display confirmation in the console
+                self.comment_box.clear()  # Clear the comment box
 
 
     def next_move(self):
