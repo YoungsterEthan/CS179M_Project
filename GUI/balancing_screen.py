@@ -1,8 +1,10 @@
 from PyQt5.QtWidgets import (
-    QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout, QTextEdit, QToolTip
+    QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout, QTextEdit, QToolTip, QLineEdit
 )
 from PyQt5.QtCore import Qt, QPropertyAnimation, QRect, QPointF, QEasingCurve, QTimer, QEvent
 from PyQt5.QtGui import QPainter, QBrush, QPen, QColor, QFont
+
+from Logger import Logger
 
 class GridWidget(QGridLayout):
     """Customizable grid for displaying containers."""
@@ -122,6 +124,7 @@ class BalancingLoadingScreen(QWidget):
         self.right_grid_dims = grid_right_dims
 
         self.moves = []
+        self.time_remaining = 0
 
         # Horizontal layout for grids, crane, and truck
         main_layout = QHBoxLayout()
@@ -163,6 +166,25 @@ class BalancingLoadingScreen(QWidget):
         controls_layout = QHBoxLayout()
         controls_layout.setSpacing(10)
 
+        # Back to Login Button
+        back_to_login_button = QPushButton("Back to Login")
+        back_to_login_button.setFont(QFont("Arial", 12, QFont.Bold))
+        back_to_login_button.setFixedSize(250, 40)
+        back_to_login_button.setStyleSheet(
+            """
+            QPushButton {
+                background-color: #4682B4;  /* Steel Blue */
+                color: white;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #1E90FF;  /* Dodger Blue */
+            }
+            """
+        )
+        back_to_login_button.clicked.connect(self.switch_to_login)
+        controls_layout.addWidget(back_to_login_button)
+
         # Next Move Button
         next_button = QPushButton("Next Move")
         next_button.setFont(QFont("Arial", 12, QFont.Bold))
@@ -183,9 +205,9 @@ class BalancingLoadingScreen(QWidget):
         controls_layout.addWidget(next_button)
 
         # Estimated Time Remaining
-        time_label = QLabel("Estimated Time Remaining: N/A")
-        time_label.setStyleSheet("font-size: 14px; color: black;")
-        controls_layout.addWidget(time_label)
+        self.time_label = QLabel("Estimated Time Remaining: N/A")
+        self.time_label.setStyleSheet("font-size: 14px; color: black;")
+        controls_layout.addWidget(self.time_label)
 
         # Manifest Button
         manifest_button = QPushButton("View Manifest")
@@ -205,6 +227,7 @@ class BalancingLoadingScreen(QWidget):
         )
         manifest_button.clicked.connect(show_manifest_viewer)
         controls_layout.addWidget(manifest_button)
+
 
         # Back Button
         back_button = QPushButton("Back to Home")
@@ -251,7 +274,7 @@ class BalancingLoadingScreen(QWidget):
         self.current_source = None  
         self.current_destination = None  #
 
-        # Console for logging moves
+        #Console for logging moves
         self.console = QTextEdit()
         self.console.setReadOnly(True)
         self.console.setFixedSize(500, 100) 
@@ -269,13 +292,36 @@ class BalancingLoadingScreen(QWidget):
             """
         )
 
-        # Add the console in a bottom-centered position
-        console_layout = QHBoxLayout()
-        console_layout.addStretch()
+        # Comment box for operator input
+        self.comment_box = QLineEdit()
+        self.comment_box.setPlaceholderText("Enter your comment here and press Enter...")
+        self.comment_box.setFixedSize(500, 30)
+        self.comment_box.setStyleSheet(
+            """
+            QLineEdit {
+                background-color: white;
+                color: black;
+                font-family: Arial, sans-serif;
+                font-size: 12px;
+                border-radius: 5px;
+                padding: 5px;
+                border: 2px solid #4682B4;  /* Steel Blue border */
+            }
+            """
+        )
+        self.comment_box.returnPressed.connect(self.log_comment)
+
+        # Add the console and comment box in a bottom-centered position
+        console_layout = QVBoxLayout()
         console_layout.addWidget(self.console)
-        console_layout.addStretch()
+        console_layout.addWidget(self.comment_box)
 
         layout.addLayout(console_layout)
+        self.setLayout(layout)
+
+    def switch_to_login(self):
+        """Switch to the login screen and save the current state."""
+        self.main_window.show_login_screen()
 
 
 
@@ -298,7 +344,7 @@ class BalancingLoadingScreen(QWidget):
             if location == "CRANE_REST":
                 x, y = 1125, 280
             elif location == "TRUCK":
-                x, y = 1020, 475
+                x, y = 1020, 435
             elif location == "SHIP":
                 x, y = self.get_cell_position(row, col)
             else:
@@ -319,7 +365,7 @@ class BalancingLoadingScreen(QWidget):
     def get_cell_position(self, row, col):
         """Calculate the top-left position of a grid cell for the circle."""
         grid_bottom_left_x = 1190
-        grid_bottom_left_y = 695
+        grid_bottom_left_y = 650
 
 
         x = grid_bottom_left_x + (col - 1) * 40
@@ -358,12 +404,38 @@ class BalancingLoadingScreen(QWidget):
         """Set the moves for the screen."""
         self.moves = moves
         self.current_move_index = 0
+        self.calculate_total_time()
+        self.update_time_label
+
+    def calculate_total_time(self):
+        """Calculate the total time for all moves."""
+        self.total_time = sum(move.time_to_move for move in self.moves)
+
+    def calculate_remaining_time(self):
+        """Calculate the remaining time for the moves."""
+        remaining_moves = self.moves[self.current_move_index:]
+        return sum(move.time_to_move for move in remaining_moves)
+
+    def update_time_label(self):
+        """Update the time label with the remaining time."""
+        remaining_time = self.calculate_remaining_time()
+        self.time_label.setText(f"Estimated Time Remaining: {remaining_time} minutes")
+
+    def log_comment(self):
+            """Log the comment entered in the comment box."""
+            comment = self.comment_box.text().strip()
+            if comment:
+                self.main_window.logger.log_comment(comment)  # Log the comment using Logger
+                self.console.append(f"Comment logged: {comment}")  # Display confirmation in the console
+                self.comment_box.clear()  # Clear the comment box
+
 
     def next_move(self):
         """Execute the next move in the list, animate the circle, and log the move."""
         
         if self.current_move_index < len(self.moves):
             move = self.moves[self.current_move_index]
+            self.main_window.logger.log_move(move)
             print(f"Executing move: {move}")
             self.main_window.save_move_progress()
 
@@ -398,12 +470,17 @@ class BalancingLoadingScreen(QWidget):
             # Increment the move index
             self.current_move_index += 1
 
+            # Update time label
+            self.update_time_label()
+
             if self.current_move_index >= len(self.moves):
                 print("All moves completed.")
                 self.main_window.recovery_logger.delete()
                 self.main_window.delete_last()
         else:
             self.console.append("No more moves.")  # Notify when there are no more moves
+            self.console.append("Send Outbound Manifest to ship")
+            self.main_window.opened = False
             print("No more moves.")
 
     def _handle_container_movement(self, move):

@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtGui import QFont, QPixmap, QColor, QPainter
 from PyQt5.QtCore import Qt, QTimer
+from Logger import Logger
 
 class CustomLineEdit(QLineEdit):
     def __init__(self):
@@ -52,9 +53,13 @@ class CustomLineEdit(QLineEdit):
 
 
 class LoginScreen(QWidget):
-    def __init__(self, switch_to_task_selection):
+    def __init__(self, next_screen, main_window):
         super().__init__()
-        self.switch_to_task_selection = switch_to_task_selection
+        self.switch_screen = next_screen
+
+        self.main_window = main_window
+        
+
 
         # Set background color
         self.setStyleSheet("background-color: #87CEEB;")  # Ocean-like light blue
@@ -62,6 +67,7 @@ class LoginScreen(QWidget):
         # Main layout
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignCenter)  # Center the content vertically
+
 
         # Placeholder for Ark image
         ark_image_label = QLabel()
@@ -95,16 +101,16 @@ class LoginScreen(QWidget):
         self.username_field.setFixedSize(250, 35)
         self.username_field.setFont(QFont("Arial", 10))
 
-        # Password field
-        self.password_label = QLabel("Password:")
-        self.password_label.setFont(QFont("Arial", 12))
-        self.password_label.setStyleSheet("color: #2F4F4F;")
+        # # Password field
+        # self.password_label = QLabel("Password:")
+        # self.password_label.setFont(QFont("Arial", 12))
+        # self.password_label.setStyleSheet("color: #2F4F4F;")
 
-        self.password_field = CustomLineEdit()
-        self.password_field.setFixedSize(250, 35)
+        # self.password_field = CustomLineEdit()
+        # self.password_field.setFixedSize(250, 35)
 
-        self.password_field.setFont(QFont("Arial", 10))
-        self.password_field.setEchoMode(QLineEdit.Password)
+        # self.password_field.setFont(QFont("Arial", 10))
+        # self.password_field.setEchoMode(QLineEdit.Password)
 
         # Login button
         self.login_button = QPushButton("Login")
@@ -137,8 +143,8 @@ class LoginScreen(QWidget):
         layout.addSpacing(10)
         layout.addWidget(self.username_label)
         layout.addWidget(self.username_field)
-        layout.addWidget(self.password_label)
-        layout.addWidget(self.password_field)
+        # layout.addWidget(self.password_label)
+        # layout.addWidget(self.password_field)
         layout.addWidget(self.login_button)
         layout.addWidget(self.error_label)
 
@@ -147,11 +153,17 @@ class LoginScreen(QWidget):
     def validate_login(self):
         """Validate the entered credentials."""
         username = self.username_field.text()
-        password = self.password_field.text()
 
-        if username == "" and password == "":
+        if ( not (username == "" or  # Username must not be empty
+    len(username) < 3 or  # Username must be at least 3 characters long
+    len(username) > 20 or  # Username must not exceed 20 characters
+    not username[0].isalpha() or  # Username must start with a letter
+    not username.isalnum())  # Username must contain only alphanumeric characters
+):
+            self.main_window.logger.log_sign_in(username)
             self.error_label.hide()
-            self.switch_to_task_selection()
+            self.switch_screen()
+            
         else:
             # Update and show the error message
             self.error_label.setText("Invalid credentials. Please try again.")

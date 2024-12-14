@@ -22,7 +22,7 @@ class Logger:
     #3 = moved within ship
     def log_move(self, move):
         with open(self.logpath + self.logname, 'a+') as f:
-            f.write(get_time() + self.currentoperator + str(move) + "\n")
+            f.write(get_time() + self.currentoperator + ' ' + str(move) + "\n")
 
     def log_open_manifest(self, manifest):
         with open(self.logpath + self.logname, 'a+') as f:
@@ -35,7 +35,7 @@ class Logger:
     ## Log a comment that the operator wants to make
     def log_comment(self, comment):
         with open(self.logpath + self.logname, 'a+') as f:
-            f.write(get_time() + comment + "\n")
+            f.write(get_time() + self.currentoperator + ' ' + comment + "\n")
 
     ## Log a sign in by the operator
     ## Updates the current operator

@@ -78,16 +78,16 @@ class RecoveryLogger:
     ## from_location from_row from_column to_location to_row to_column time_to_move container_weight container_name
     ## rows and columns are 0 indexed
     def parse_move(self, line):
-        parts = line.split()
-        m_from = Position(parts[0], [int(parts[1]), int(parts[2])])
-        m_to = Position(parts[3], [int(parts[4]), int(parts[5])])
-        ttm = int(parts[6])
-        weight = int(parts[7])
-        name = parts[8]
-        for i in range(9, len(parts)-1):
-            name += " " + parts[i]
-        container = ContainerData(name, weight)
-        return Move(m_from, m_to, ttm, container)
+      parts = line.split()
+      m_from = Position(parts[0], [int(parts[1]), int(parts[2])])
+      m_to = Position(parts[3], [int(parts[4]), int(parts[5])])
+      ttm = int(parts[6])
+      weight = int(parts[7])
+      name = parts[8]
+      for i in range(9, len(parts)-1):
+          name += " " + parts[i]
+      container = ContainerData(name, weight)
+      return Move(m_from, m_to, ttm, container)
 
     ## Write the last completed move to the recovery file
     def save_next_move(self):
