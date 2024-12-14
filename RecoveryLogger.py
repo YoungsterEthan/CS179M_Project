@@ -82,7 +82,10 @@ class RecoveryLogger:
         m_from = Position(parts[0], [int(parts[1]), int(parts[2])])
         m_to = Position(parts[3], [int(parts[4]), int(parts[5])])
         ttm = int(parts[6])
-        container = ContainerData(parts[7], int(parts[8]))
+        name = ""
+        for i in range(7, len(parts)-1):
+            name += parts[i] + " "
+        container = ContainerData(name, int(parts[8]))
         return Move(m_from, m_to, ttm, container)
 
     ## Write the last completed move to the recovery file
