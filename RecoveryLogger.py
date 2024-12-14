@@ -49,7 +49,7 @@ class RecoveryLogger:
 
     ## Convert a Move to a string
     def stringify_move(self, move):
-            return move.m_from.location + " " + str(move.m_from.m) + " " + str(move.m_from.n) + " " + move.m_to.location + " " + str(move.m_to.m) + " " + str(move.m_to.n) + " " + str(move.time_to_move) + " " + str(move.container.weight) + " " + move.container.name
+        return move.m_from.location + " " + str(move.m_from.m) + " " + str(move.m_from.n) + " " + move.m_to.location + " " + str(move.m_to.m) + " " + str(move.m_to.n) + " " + str(move.time_to_move) + " " + str(move.container.weight) + " " + move.container.name
 
     ## Recover the list of Moves and the current Move from the recovery file
     ## If no recovery file exists there is nothing to recover
@@ -75,19 +75,19 @@ class RecoveryLogger:
     
 
     ## Moves formmated as:
-    ## from_location from_row from_column to_location to_row to_column time_to_move container_name container_weight
+    ## from_location from_row from_column to_location to_row to_column time_to_move container_weight container_name
     ## rows and columns are 0 indexed
     def parse_move(self, line):
-            parts = line.split()
-            m_from = Position(parts[0], [int(parts[1]), int(parts[2])])
-            m_to = Position(parts[3], [int(parts[4]), int(parts[5])])
-            ttm = int(parts[6])
-            weight = int(parts[7])
-            name = parts[8]
-            for i in range(9, len(parts)-1):
-                name += " " + parts[i]
-            container = ContainerData(name, weight)
-            return Move(m_from, m_to, ttm, container)
+      parts = line.split()
+      m_from = Position(parts[0], [int(parts[1]), int(parts[2])])
+      m_to = Position(parts[3], [int(parts[4]), int(parts[5])])
+      ttm = int(parts[6])
+      weight = int(parts[7])
+      name = parts[8]
+      for i in range(9, len(parts)-1):
+          name += " " + parts[i]
+      container = ContainerData(name, weight)
+      return Move(m_from, m_to, ttm, container)
 
     ## Write the last completed move to the recovery file
     def save_next_move(self):
